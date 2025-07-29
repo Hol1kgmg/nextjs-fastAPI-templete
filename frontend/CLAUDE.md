@@ -149,23 +149,48 @@ Claude Code は日本語でコミュニケーションを行う必要があり�
 
 ## 開発コマンド
 
-### 基本コマンド
+### 環境管理
+
+- `mise install` - .mise.tomlで指定されたツールをインストール
+- `mise current` - 現在有効なツールバージョンを表示
+- `mise list` - 利用可能なツール一覧を表示
+
+### 基本コマンド（Task推奨）
+
+- `task install` - 依存関係をインストール（Bun使用）
+- `task dev` - 開発サーバーを開始（Next.js）
+- `task build` - プロダクションアプリケーションをビルド
+- `task start` - プロダクションサーバーを開始
+- `task typecheck` - TypeScript で型チェック
+
+### コード品質コマンド（Task推奨）
+
+- `task check` - Biome リンターとフォーマッターのチェックを実行
+- `task check:fix` - Biome で自動修正を実行（安全でない修正を含む）
+- `task format` - Biome でフォーマットをチェック
+- `task format:fix` - Biome でコードを自動フォーマット
+- `task check:all` - 全コード品質チェック統合実行
+- `task fix:all` - 自動修正統合実行
+
+### テスト・Storybookコマンド（Task推奨）
+
+- `task test` - Vitest でテストを一度実行して終了
+- `task storybook` - Storybook開発サーバーを開始
+- `task build-storybook` - Storybookをビルド
+
+### 従来のbunコマンド（互換性のため残存）
 
 - `bun run dev` - 開発サーバーを開始（Next.js）
 - `bun run build` - 本番アプリケーションをビルド
 - `bun run start` - 本番サーバーを開始
 - `bun run typecheck` - TypeScript で型チェック
-
-### コード品質コマンド
-
 - `bun run check` - Biome リンターとフォーマッターのチェックを実行
 - `bun run check:fix` - Biome で自動修正を実行（安全でない修正を含む）
 - `bun run format` - Biome でフォーマットをチェック
 - `bun run format:fix` - Biome でコードを自動フォーマット
-
-### テストコマンド
-
-- `bun run test` - Vitest でテストを一度実行して終了（`bun test`の代わりに使用）
+- `bun run test` - Vitest でテストを一度実行して終了
+- `bun run env:check` - Node.js・Bunバージョン確認
+- `bun run env:mise` - mise管理ツール一覧表示
 
 ### コード解析コマンド
 
@@ -185,7 +210,19 @@ Claude Code は日本語でコミュニケーションを行う必要があり�
 - **スタイリング**: Tailwind CSS v4
 - **UI コンポーネント**: shadcn/ui with Radix UI primitives
 - **コード品質**: Biome for linting and formatting
+- **バージョン管理**: mise (Node.js, Bun, Task管理)
+- **タスクランナー**: Task (統一コマンド体系)
 - **Git hooks**: Lefthook
+
+### mise環境管理
+
+このプロジェクトではmiseを使用してツールバージョンを統一管理しています：
+
+- **Node.js**: 18.18.0（Next.js要件を満たすバージョン）
+- **Bun**: 1.1.8（パッケージマネージャー）
+- **Task**: 3.44.0（タスクランナー）
+
+設定ファイル: `.mise.toml`
 
 ### プロジェクト構造
 

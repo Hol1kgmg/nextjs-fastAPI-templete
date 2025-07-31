@@ -5,7 +5,13 @@ Kiro用
 ```
 Claude Code用
 ```bash
-リポジトリ直下のREADME.mdとCLAUDE.mdを確認後、担当領域を明確にしてから、該当する専用CLAUDE.mdを読み込んで待機して
+~/.claude/settings.local.jsonを読み込んで、リポジトリ直下のREADME.mdとCLAUDE.mdを確認後、担当領域を明確にしてから、該当する専用CLAUDE.mdを読み込んで待機して
+```
+
+**Kiro関連ファイルのgit管理**
+```bash
+# .kiro/prompts*はすでにgit追跡に含まれているため、命令プロンプトドキュメントを無視するコマンドを実行する必要があります
+git update-index --assume-unchanged .kiro/prompts/*
 ```
 
 # Next.js + FastAPI Template
@@ -71,10 +77,14 @@ nextjs-fastapi-template/
 ## ⚡ クイックスタート
 
 ### 前提条件
-- Node.js 18.0.0 以上
-- Python 3.11 以上
-- Docker & Docker Compose
-- mise (推奨)
+- **mise**: ツールバージョン管理 ([インストール方法](https://mise.jdx.dev/getting-started.html))
+- **Docker & Docker Compose**: コンテナ環境
+- Node.js 18.18.0 以上（miseで管理）
+- Python 3.11 以上（miseで管理）
+- Bun 1.1.8（miseで管理）
+- Task（miseで管理）
+
+**mise統一環境**: このプロジェクトではmiseを使用してフロントエンドとバックエンドのツールバージョンを統一管理し、Taskによる一貫したコマンド体系を実現しています。
 
 ### 1. リポジトリのクローン
 ```bash
@@ -85,6 +95,13 @@ cd nextjs-fastAPI-templete
 ### 2. フロントエンド環境構築
 ```bash
 cd frontend
+
+# mise環境セットアップ
+mise install     # Node.js, Bun, Taskをインストール
+task install     # 依存関係インストール
+task dev         # 開発サーバー起動
+
+# または従来の方法
 bun install
 bun run dev
 ```
@@ -98,6 +115,11 @@ bun run dev
 cd backend
 # 詳細な環境構築手順は backend/README.md を必ず確認してください
 ```
+
+**mise統一環境の利点**:
+- フロントエンドとバックエンドで同じコマンド体系
+- ツールバージョンの統一管理と一貫性保証
+- Taskでの統合された品質チェックと自動修正
 
 **注意事項**:
 - `mise install` や `task install` 実行直後は、コマンドが適切に使用できない場合があります
@@ -135,7 +157,8 @@ cd backend
 - **開発効率化**: 自動マイグレーション、ホットリロード
 
 ### 開発体験
-- **統一された開発環境**: mise による一貫したツール管理
+- **mise統一環境**: フロントエンド・バックエンド両方でのツールバージョン統一管理
+- **Task統一コマンド**: 一貫したコマンド体系による開発効率向上
 - **自動化されたワークフロー**: Git hooks、品質チェック
 - **包括的なドキュメント**: 各コンポーネントの詳細ガイド
 

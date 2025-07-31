@@ -12,24 +12,43 @@ Next.js 15 + TypeScript + Tailwind CSS + shadcn/ui を使用したモダンなWe
 - **Testing**: Vitest + Testing Library
 - **Storybook**: Component development & documentation
 - **Package Manager**: Bun
+- **Version Management**: mise (Node.js, Bun, Task管理)
+- **Task Runner**: Task (統一コマンド体系)
 - **Git Hooks**: Lefthook
 
 ## 開発環境のセットアップ
 
 ### 前提条件
 
-- Node.js 18.0.0 以上
-- Bun (推奨) または npm/yarn/pnpm
+- **mise**: ツールバージョン管理 ([インストール方法](https://mise.jdx.dev/getting-started.html))
+- **Task**: タスクランナー（miseで自動インストール）
+- Node.js 18.18.0 以上（miseで管理）
+- Bun 1.1.8（miseで管理）
 
-### インストール
+**重要**: このプロジェクトではmiseを使用してNode.js、Bun、Taskのバージョンを統一管理しています。
+
+### セットアップ手順
 
 ```bash
+# 1. 必要なツールをインストール
+mise install
+
+# 2. 環境確認
+mise current
+
+# 3. 依存関係をインストール
+task install
+# または
 bun install
 ```
 
 ### 開発サーバーの起動
 
 ```bash
+# Taskを使用（推奨）
+task dev
+
+# または従来の方法
 bun run dev
 ```
 
@@ -37,35 +56,57 @@ http://localhost:3000 でアプリケーションにアクセスできます。
 
 ## 利用可能なコマンド
 
-### 開発
+### Taskコマンド（推奨）
 
 ```bash
+# 環境管理
+task install         # 依存関係をインストール
+
+# 開発
+task dev            # 開発サーバーを起動
+task build          # プロダクション用ビルド
+task start          # プロダクションサーバーを起動
+task typecheck      # TypeScript型チェック
+
+# コード品質
+task check          # Biome linter/formatter チェック
+task check:fix      # Biome 自動修正（unsafe修正含む）
+task format         # Biome フォーマットチェック
+task format:fix     # Biome 自動フォーマット
+
+# 統合コマンド
+task check:all      # 全品質チェック統合実行
+task fix:all        # 自動修正統合実行
+
+# テスト・Storybook
+task test           # Vitestでテスト実行
+task storybook      # Storybook開発サーバーを起動
+task build-storybook # Storybookをビルド
+```
+
+### 従来のbunコマンド
+
+```bash
+# 開発
 bun run dev          # 開発サーバーを起動
 bun run build        # プロダクション用ビルド
 bun run start        # プロダクションサーバーを起動
 bun run typecheck    # TypeScript型チェック
-```
 
-### コード品質
-
-```bash
+# コード品質
 bun run check        # Biome linter/formatter チェック
 bun run check:fix    # Biome 自動修正（unsafe修正含む）
 bun run format       # Biome フォーマットチェック
 bun run format:fix   # Biome 自動フォーマット
-```
 
-### テスト
-
-```bash
+# テスト・Storybook
 bun run test         # Vitestでテスト実行
-```
+bun run storybook    # Storybook開発サーバーを起動
+bun run build-storybook # Storybookをビルド
 
-### Storybook
-
-```bash
-bun run storybook        # Storybook開発サーバーを起動 (http://localhost:6006)
-bun run build-storybook  # Storybookをビルド
+# 環境確認
+bun run env:check    # Node.js・Bunバージョン確認
+bun run env:mise     # mise管理ツール一覧表示
 ```
 
 ## プロジェクト構成
@@ -101,6 +142,23 @@ Lefthookにより以下のフックが自動実行されます：
 
 - **Pre-commit**: `bun run check:fix` による自動修正
 - **Pre-push**: `bun run check` と `bun run typecheck` による品質チェック
+
+## 環境確認
+
+開発環境で問題が発生した場合は、以下のコマンドで環境を確認できます：
+
+```bash
+# mise管理ツールの確認
+mise current
+mise list
+
+# バージョン確認
+task env:check     # または bun run env:check
+task env:mise      # または bun run env:mise
+
+# Task一覧表示
+task --list
+```
 
 ## shadcn/ui
 

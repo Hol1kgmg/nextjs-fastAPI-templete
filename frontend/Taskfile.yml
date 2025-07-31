@@ -1,0 +1,89 @@
+version: '3'
+
+tasks:
+  list:
+    desc: Display available task commands for frontend
+    cmds:
+      - echo "📋 Available frontend task commands:"
+      - task --list
+
+  install:
+    desc: Install dependencies using Bun
+    cmds:
+      - bun install
+
+  # Basic commands
+  dev:
+    desc: Start development server (Next.js)
+    cmds:
+      - bun run dev
+
+  build:
+    desc: Build production application
+    cmds:
+      - bun run build
+
+  start:
+    desc: Start production server
+    cmds:
+      - bun run start
+
+  # Code quality commands
+  check:
+    desc: Run Biome linter and formatter checks
+    cmds:
+      - bun run check
+
+  check:fix:
+    desc: Run Biome auto-fix (including unsafe fixes)
+    cmds:
+      - bun run check:fix
+
+  format:
+    desc: Check code formatting with Biome
+    cmds:
+      - bun run format
+
+  format:fix:
+    desc: Auto-format code with Biome
+    cmds:
+      - bun run format:fix
+
+  typecheck:
+    desc: Run TypeScript type checking
+    cmds:
+      - bun run typecheck
+
+  # Test commands
+  test:
+    desc: Run tests once with Vitest
+    cmds:
+      - bun run test
+
+  # Storybook commands
+  storybook:
+    desc: Start Storybook development server
+    cmds:
+      - bun run storybook
+
+  build-storybook:
+    desc: Build Storybook
+    cmds:
+      - bun run build-storybook
+
+  # Integrated quality checks
+  check:all:
+    desc: Run all code quality checks (check, format, typecheck)
+    cmds:
+      - task check
+      - task format
+      - task typecheck
+      - echo "✅ All code quality checks completed"
+
+  fix:all:
+    desc: Run integrated auto-fix (check:fix + format:fix)
+    cmds:
+      - echo "🔧 Starting code quality auto-fix..."
+      - task check:fix
+      - task format:fix
+      - echo "✅ Auto-fix completed. Please run type checking - task typecheck"

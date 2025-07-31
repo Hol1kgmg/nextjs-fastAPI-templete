@@ -1,6 +1,12 @@
 version: '3'
 
 tasks:
+  list:
+    desc: Display available task commands for backend
+    cmds:
+      - echo "📋 Available backend task commands:"
+      - task --list
+
   install:
     desc: Install dependencies using uv
     cmds:

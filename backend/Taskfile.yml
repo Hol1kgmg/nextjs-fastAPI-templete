@@ -127,6 +127,16 @@ tasks:
     cmds:
       - docker compose -f docker/docker-compose.yml down
 
+  docker:db:
+    desc: Start only database container (lightweight option)
+    cmds:
+      - docker compose -f docker/docker-compose.yml up db
+
+  docker:db:detached:
+    desc: Start only database container in background
+    cmds:
+      - docker compose -f docker/docker-compose.yml up -d db
+
   clean:
     desc: Clean up generated files
     cmds:

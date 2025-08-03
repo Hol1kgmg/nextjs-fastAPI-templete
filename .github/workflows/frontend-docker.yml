@@ -16,41 +16,51 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Setup mise
-        uses: jdx/mise-action@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          version: 2024.1.0
+          node-version: '18.18.0'
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
       
-      - name: Install frontend tools
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: '1.1.8'
+      
+      - name: Install Task
         run: |
-          cd frontend
-          mise install
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
       
       - name: Install dependencies
         run: |
           cd frontend
-          task install
+          bun install
       
       - name: Run code quality checks
         run: |
           cd frontend
-          task check:all
+          bun run check
+          bun run format
+          bun run typecheck
       
       - name: Build Docker image
         run: |
           cd frontend
-          task docker:build
+          docker build -f docker/Dockerfile -t frontend:latest .
       
       - name: Test Docker container
         run: |
           cd frontend
-          task docker:run
+          docker run -d -p 3000:3000 --name frontend-test \
+            -e BACKEND_API_URL=http://localhost:8000 \
+            frontend:latest
           sleep 10
           curl -f http://localhost:3000 || exit 1
-          task docker:stop
+          docker stop frontend-test
+          docker rm frontend-test
       
       - name: Clean up
         if: always()
         run: |
-          cd frontend
-          task docker:clean || true
+          docker rmi frontend:latest || true

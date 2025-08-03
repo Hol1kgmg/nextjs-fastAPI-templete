@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - BACKEND_API_URL=${BACKEND_API_URL:-https://api.example.com}
+    volumes:
+      - npm-cache:/root/.npm
+    restart: unless-stopped
+
+volumes:
+  npm-cache:

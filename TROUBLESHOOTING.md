@@ -940,6 +940,91 @@ bun run check:fix
 bun x @biomejs/biome format --write src/app/page.tsx
 ```
 
+## フロントエンドDocker関連
+
+### Dockerビルドエラー
+
+**問題**: `task docker:build`が失敗する
+**解決方法**:
+```bash
+cd frontend
+task docker:clean
+docker system prune
+task docker:build
+```
+
+### コンテナ起動エラー
+
+**問題**: `task docker:run`でコンテナが起動しない
+**解決方法**:
+```bash
+# ポート確認
+lsof -i :3000
+
+# ログ確認
+task docker:logs
+
+# 強制停止・削除
+docker stop frontend-app || true
+docker rm frontend-app || true
+```
+
+### 環境変数エラー
+
+**問題**: BACKEND_API_URLが正しく設定されない
+**解決方法**:
+- `frontend/docker/.env.docker`の設定を確認
+- 環境変数がNEXT_PUBLIC_プレフィックスなしで設定されていることを確認
+
+## フロントエンドmise関連
+
+### mise環境が認識されない
+
+**問題**: `mise: command not found` または mise管理下のツールが使用されない
+**解決方法**:
+```bash
+cd frontend
+
+# mise環境の再有効化
+eval "$(mise activate zsh)"
+
+# ツールの再インストール
+mise install
+
+# バージョン確認
+node --version  # v18.18.0
+bun --version   # 1.1.8
+```
+
+### Node.js/Bunのバージョンが違う
+
+**問題**: システム版のNode.js/Bunが使用されている
+**解決方法**:
+```bash
+# mise管理下のツールが使用されているか確認
+which node  # ~/.local/share/mise/installs/node/18.18.0/bin/node
+which bun   # ~/.local/share/mise/installs/bun/1.1.8/bin/bun
+
+# mise環境の再設定が必要な場合
+eval "$(mise activate zsh)"
+mise install
+```
+
+### フロントエンドタスクが実行されない
+
+**問題**: プロジェクト直下でfrontendタスクが認識されない
+**解決方法**:
+```bash
+# フロントエンドディレクトリに移動
+cd frontend
+
+# 明示的にフロントエンドのTaskfile.ymlを使用
+task --taskfile Taskfile.yml dev
+
+# または通常のタスク実行
+task dev
+```
+
 ---
 
 ## 🔄 CI/CD問題

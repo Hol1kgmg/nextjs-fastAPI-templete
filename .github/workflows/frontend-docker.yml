@@ -11,6 +11,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
     
     steps:
       - name: Checkout code
@@ -22,30 +25,22 @@ jobs:
           node-version: '18.18.0'
       
       - name: Install dependencies
-        run: |
-          cd frontend
-          npm install
+        run: npm install
       
       - name: Run code quality checks
         run: |
-          cd frontend
           npm run check
           npm run format
           npm run typecheck
       
       - name: Build application
-        run: |
-          cd frontend
-          npm run build
+        run: npm run build
       
       - name: Build Docker image
-        run: |
-          cd frontend
-          docker build -f docker/Dockerfile -t frontend:latest .
+        run: docker build -f docker/Dockerfile -t frontend:latest .
       
       - name: Test Docker container
         run: |
-          cd frontend
           docker run -d -p 3000:3000 --name frontend-test \
             -e BACKEND_API_URL=http://localhost:8000 \
             frontend:latest
@@ -56,5 +51,4 @@ jobs:
       
       - name: Clean up
         if: always()
-        run: |
-          docker rmi frontend:latest || true
+        run: docker rmi frontend:latest || true

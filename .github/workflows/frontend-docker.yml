@@ -20,29 +20,23 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18.18.0'
-          cache: 'npm'
-          cache-dependency-path: 'frontend/package-lock.json'
-      
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: '1.1.8'
-      
-      - name: Install Task
-        run: |
-          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
       
       - name: Install dependencies
         run: |
           cd frontend
-          bun install
+          npm install
       
       - name: Run code quality checks
         run: |
           cd frontend
-          bun run check
-          bun run format
-          bun run typecheck
+          npm run check
+          npm run format
+          npm run typecheck
+      
+      - name: Build application
+        run: |
+          cd frontend
+          npm run build
       
       - name: Build Docker image
         run: |

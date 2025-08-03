@@ -21,3 +21,7 @@ Thumbs.db
 
 # Kiro related files (AI開発支援ツール)
 .kiro/
+
+# mise関連ファイル (ツールバージョン管理)
+.mise/
+.mise.lock

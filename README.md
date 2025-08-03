@@ -107,6 +107,45 @@ bun run dev
 ```
 詳細は [`frontend/README.md`](./frontend/README.md) を参照
 
+### フロントエンドmise環境
+
+フロントエンドでmiseによるツールバージョン管理が利用可能です：
+
+```bash
+# フロントエンドディレクトリに移動
+cd frontend
+
+# mise環境セットアップ
+mise install
+task install
+task dev
+```
+
+詳細は [`frontend/README.md`](./frontend/README.md) の「mise環境での開発」セクションを参照してください。
+
+### フロントエンドDocker環境
+
+フロントエンドのDockerコンテナ構築が利用可能です：
+
+```bash
+# フロントエンドディレクトリに移動
+cd frontend
+
+# Dockerイメージをビルド
+task docker:build
+
+# コンテナを起動
+task docker:run
+
+# ログを確認
+task docker:logs
+
+# コンテナを停止
+task docker:stop
+```
+
+詳細は [`frontend/README.md`](./frontend/README.md) の「Docker デプロイメント」セクションを参照してください。
+
 ### 3. バックエンド環境構築
 
 **重要**: バックエンドの環境構築は複数のステップと環境設定が必要なため、AIではなく**開発者自身が手動で実行**することを強く推奨します。

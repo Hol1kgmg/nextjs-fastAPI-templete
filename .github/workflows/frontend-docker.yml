@@ -1,0 +1,54 @@
+name: Frontend Docker Build
+
+on:
+  push:
+    branches: [main, develop]
+    paths: ['frontend/**']
+  pull_request:
+    branches: [main]
+    paths: ['frontend/**']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.18.0'
+      
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      
+      - name: Run code quality checks
+        run: |
+          npm run check
+          npm run format
+          npm run typecheck
+      
+      - name: Build application
+        run: npm run build
+      
+      - name: Build Docker image
+        run: docker build -f docker/Dockerfile -t frontend:latest .
+      
+      - name: Test Docker container
+        run: |
+          docker run -d -p 3000:3000 --name frontend-test \
+            -e BACKEND_API_URL=http://localhost:8000 \
+            frontend:latest
+          sleep 10
+          curl -f http://localhost:3000 || exit 1
+          docker stop frontend-test
+          docker rm frontend-test
+      
+      - name: Clean up
+        if: always()
+        run: docker rmi frontend:latest || true

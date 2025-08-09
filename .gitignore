@@ -13,7 +13,7 @@ Thumbs.db
 .Trashes
 
 # Environment files (全プロジェクト共通)
-.env*
+.env
 
 # Temporary files (全プロジェクト共通)
 *.tmp

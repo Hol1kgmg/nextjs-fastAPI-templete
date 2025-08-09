@@ -120,9 +120,17 @@ tasks:
       - docker-compose -f docker/docker-compose.yml build
 
   docker:up:
-    desc: "[Backend] Start Docker containers"
+    desc: "[Backend] Start Docker containers (auto-detect DEBUG mode)"
+    dotenv: ['.env']
     cmds:
-      - docker-compose -f docker/docker-compose.yml up
+      - |
+        if [ "${DEBUG:-false}" = "true" ]; then
+          echo "🐛 DEBUG=true: Starting with Adminer"
+          COMPOSE_PROFILES=debug docker-compose -f docker/docker-compose.yml --env-file .env up
+        else
+          echo "🚀 DEBUG=false: Starting without Adminer"
+          docker-compose -f docker/docker-compose.yml --env-file .env up
+        fi
 
   docker:down:
     desc: "[Backend] Stop Docker containers"
@@ -130,14 +138,40 @@ tasks:
       - docker-compose -f docker/docker-compose.yml down
 
   docker:db:
-    desc: "[Backend] Start only database container (lightweight option)"
+    desc: "[Backend] Start only database container (auto-detect DEBUG mode)"
+    dotenv: ['.env']
     cmds:
-      - docker-compose -f docker/docker-compose.yml up db
+      - |
+        if [ "${DEBUG:-false}" = "true" ]; then
+          echo "🐛 DEBUG=true: Starting DB with Adminer"
+          COMPOSE_PROFILES=debug docker-compose -f docker/docker-compose.yml --env-file .env up db adminer
+        else
+          echo "🚀 DEBUG=false: Starting DB only"
+          docker-compose -f docker/docker-compose.yml --env-file .env up db
+        fi
 
   docker:db:detached:
-    desc: "[Backend] Start only database container in background"
+    desc: "[Backend] Start database container in background (auto-detect DEBUG mode)"
+    dotenv: ['.env']
     cmds:
-      - docker-compose -f docker/docker-compose.yml up -d db
+      - |
+        if [ "${DEBUG:-false}" = "true" ]; then
+          echo "🐛 DEBUG=true: Starting DB with Adminer in background"
+          COMPOSE_PROFILES=debug docker-compose -f docker/docker-compose.yml --env-file .env up -d db adminer
+        else
+          echo "🚀 DEBUG=false: Starting DB only in background"
+          docker-compose -f docker/docker-compose.yml --env-file .env up -d db
+        fi
+
+  docker:logs:db:
+    desc: "[Backend] Show database container logs"
+    cmds:
+      - docker-compose -f docker/docker-compose.yml logs -f db
+
+  docker:restart:db:
+    desc: "[Backend] Restart database container"
+    cmds:
+      - docker-compose -f docker/docker-compose.yml restart db
 
   clean:
     desc: "[Backend] Clean up generated files"

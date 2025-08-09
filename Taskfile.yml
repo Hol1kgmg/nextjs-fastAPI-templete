@@ -61,13 +61,10 @@ tasks:
 
   # Docker個別サービスタスク
   docker:up:db:
-    desc: "[Docker] Start database container only (detached)"
+    desc: "[Docker] Start database container (auto-detect DEBUG mode)"
     dir: backend
     cmds:
-      - docker-compose -f docker/docker-compose.yml up -d db
-      - echo "✅ Database container started in background"
-      - echo "📋 Use 'task docker:logs:db' to view logs"
-      - echo "🛑 Use 'task docker:down:backend' to stop"
+      - task -d backend docker:db:detached
 
   # バックエンド個別タスク
   install:backend:
@@ -112,21 +109,18 @@ tasks:
   # バックエンドDocker個別タスク
   docker:build:backend:
     desc: "[Backend] Build backend Docker image"
-    dir: backend
     cmds:
-      - docker-compose -f docker/docker-compose.yml build
+      - task -d backend docker:build
 
   docker:up:backend:
     desc: "[Backend] Start backend Docker environment"
-    dir: backend
     cmds:
-      - docker-compose -f docker/docker-compose.yml up
+      - task -d backend docker:up
 
   docker:down:backend:
     desc: "[Backend] Stop backend Docker environment (includes database)"
-    dir: backend
     cmds:
-      - docker-compose -f docker/docker-compose.yml down
+      - task -d backend docker:down
 
   # フロントエンド個別タスク
   install:frontend:
@@ -189,15 +183,13 @@ tasks:
   # 追加のDocker便利タスク
   docker:logs:db:
     desc: "[Docker] Show database container logs"
-    dir: backend
     cmds:
-      - docker-compose -f docker/docker-compose.yml logs -f db
+      - task -d backend docker:logs:db
 
   docker:restart:db:
     desc: "[Docker] Restart database container"
-    dir: backend
     cmds:
-      - docker-compose -f docker/docker-compose.yml restart db
+      - task -d backend docker:restart:db
 
   # バックエンドマイグレーション関連（個別タスクとして維持）
   migrate:

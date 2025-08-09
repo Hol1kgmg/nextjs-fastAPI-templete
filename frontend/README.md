@@ -27,16 +27,20 @@ Next.js 15 + TypeScript + Tailwind CSS + shadcn/ui を使用したモダンなWe
 
 **重要**: このプロジェクトではmiseを使用してNode.js、Bun、Taskのバージョンを統一管理しています。
 
-### セットアップ手順
+### フロントエンド個別開発
+
+**統合環境を使用する場合は、[プロジェクト直下のREADME.md](../README.md)の統合環境セットアップを参照してください。**
+
+**フロントエンドのみ個別に開発する場合**:
 
 ```bash
-# 1. 必要なツールをインストール
-mise install
+# フロントエンドディレクトリに移動
+cd frontend
 
-# 2. 環境確認
-mise current
+# miseツールの自動インストール
+mise trust && mise install
 
-# 3. 依存関係をインストール
+# 依存関係のインストール
 task install
 # または
 bun install
@@ -56,57 +60,10 @@ http://localhost:3000 でアプリケーションにアクセスできます。
 
 ## 利用可能なコマンド
 
-### Taskコマンド（推奨）
+利用可能なすべてのタスクコマンドは以下で確認できます：
 
 ```bash
-# 環境管理
-task install         # 依存関係をインストール
-
-# 開発
-task dev            # 開発サーバーを起動
-task build          # プロダクション用ビルド
-task start          # プロダクションサーバーを起動
-task typecheck      # TypeScript型チェック
-
-# コード品質
-task check          # Biome linter/formatter チェック
-task check:fix      # Biome 自動修正（unsafe修正含む）
-task format         # Biome フォーマットチェック
-task format:fix     # Biome 自動フォーマット
-
-# 統合コマンド
-task check:all      # 全品質チェック統合実行
-task fix:all        # 自動修正統合実行
-
-# テスト・Storybook
-task test           # Vitestでテスト実行
-task storybook      # Storybook開発サーバーを起動
-task build-storybook # Storybookをビルド
-```
-
-### 従来のbunコマンド
-
-```bash
-# 開発
-bun run dev          # 開発サーバーを起動
-bun run build        # プロダクション用ビルド
-bun run start        # プロダクションサーバーを起動
-bun run typecheck    # TypeScript型チェック
-
-# コード品質
-bun run check        # Biome linter/formatter チェック
-bun run check:fix    # Biome 自動修正（unsafe修正含む）
-bun run format       # Biome フォーマットチェック
-bun run format:fix   # Biome 自動フォーマット
-
-# テスト・Storybook
-bun run test         # Vitestでテスト実行
-bun run storybook    # Storybook開発サーバーを起動
-bun run build-storybook # Storybookをビルド
-
-# 環境確認
-bun run env:check    # Node.js・Bunバージョン確認
-bun run env:mise     # mise管理ツール一覧表示
+task list
 ```
 
 ## プロジェクト構成
@@ -183,22 +140,6 @@ task dev
 
 ```bash
 task --list  # 全タスク一覧表示
-
-# 基本コマンド
-task install     # 依存関係インストール
-task dev         # 開発サーバー起動
-task build       # プロダクションビルド
-task test        # テスト実行
-
-# 品質チェック
-task check       # Biome linting
-task format      # Biome formatting
-task typecheck   # TypeScript型チェック
-task check:all   # 統合品質チェック
-
-# ユーティリティ
-task clean       # 生成ファイルクリーンアップ
-task fix:all     # 自動修正
 ```
 
 ### トラブルシューティング

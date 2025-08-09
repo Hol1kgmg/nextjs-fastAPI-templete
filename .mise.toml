@@ -1,4 +1,11 @@
 [tools]
+# バックエンドツール
 python = "3.11"
-task = "latest"
 uv = "latest"
+
+# フロントエンドツール
+node = "18.18.0"
+bun = "1.1.8"
+
+# 共通ツール
+task = "latest"

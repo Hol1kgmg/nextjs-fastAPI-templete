@@ -128,9 +128,6 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/fastapi_db
 SECRET_KEY=development-secret-key-change-in-production
 DEBUG=true
 CORS_ORIGINS=http://localhost:3000
-
-# ログレベル
-LOG_LEVEL=DEBUG
 ```
 
 #### フロントエンド設定 (`.env.local` ファイル)

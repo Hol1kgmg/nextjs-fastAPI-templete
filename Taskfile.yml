@@ -62,7 +62,6 @@ tasks:
   # Docker個別サービスタスク
   docker:up:db:
     desc: "[Docker] Start database container (auto-detect DEBUG mode)"
-    dir: backend
     cmds:
       - task -d backend docker:db:detached
 

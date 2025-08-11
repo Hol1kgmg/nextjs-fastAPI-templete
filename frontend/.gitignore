@@ -35,7 +35,3 @@ yarn-error.log*
 
 # Miscellaneous
 *.pem
-
-# mise関連ファイル (フロントエンド固有)
-.mise/
-.mise.lock

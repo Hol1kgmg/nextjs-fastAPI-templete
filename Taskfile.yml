@@ -1,168 +1,239 @@
 version: '3'
 
+# === 共通操作（フルスタック統合タスク） ===
 tasks:
   list:
-    desc: Display available task commands for backend
+    desc: "task command lists"
     cmds:
-      - echo "📋 Available backend task commands:"
       - task --list
 
   install:
+    desc: "Install all dependencies"
+    cmds:
+      - task install:backend
+      - task install:frontend
+
+  dev:
+    desc: "Start both frontend and backend development servers"
+    deps: [dev:backend, dev:frontend]
+
+  build:
+    desc: "Build both frontend and backend"
+    cmds:
+      - task build:backend
+      - task build:frontend
+
+  test:
+    desc: "Run all tests"
+    cmds:
+      - task test:backend
+      - task test:frontend
+
+  check:all:
+    desc: "Run all quality checks"
+    cmds:
+      - task check:backend
+      - task check:frontend
+
+  clean:
+    desc: "Clean all generated files"
+    cmds:
+      - task clean:backend
+      - task clean:frontend
+
+  # === Docker含む共通操作 ===
+  docker:build:
+    desc: "Build all Docker images"
+    cmds:
+      - task docker:build:backend
+      - task docker:build:frontend
+
+  docker:up:
+    desc: "Start all Docker environments"
+    cmds:
+      - task docker:up:backend
+      - task docker:up:frontend
+
+  docker:down:
+    desc: "Stop all Docker environments"
+    cmds:
+      - task docker:down:backend
+      - task docker:down:frontend
+
+  docker:up:db:
+    desc: "Start database container (auto-detect DEBUG mode)"
+    cmds:
+      - task -d backend docker:db:detached
+
+  docker:logs:db:
+    desc: "Show database container logs"
+    cmds:
+      - task -d backend docker:logs:db
+
+  docker:restart:db:
+    desc: "Restart database container"
+    cmds:
+      - task -d backend docker:restart:db
+
+  # === Frontend専用操作 ===
+  install:frontend:
+    desc: "[Frontend] Install dependencies using Bun"
+    dir: frontend
+    cmds:
+      - bun install
+
+  dev:frontend:
+    desc: "[Frontend] Start development server"
+    dir: frontend
+    cmds:
+      - bun run dev
+
+  build:frontend:
+    desc: "[Frontend] Build production application"
+    dir: frontend
+    cmds:
+      - bun run build
+
+  test:frontend:
+    desc: "[Frontend] Run tests"
+    dir: frontend
+    cmds:
+      - bun run test
+
+  check:frontend:
+    desc: "[Frontend] Run all quality checks"
+    dir: frontend
+    cmds:
+      - bun run check
+      - bun run format
+      - bun run typecheck
+
+  clean:frontend:
+    desc: "[Frontend] Clean generated files"
+    dir: frontend
+    cmds:
+      - rm -rf .next node_modules/.cache dist storybook-static
+
+  docker:build:frontend:
+    desc: "[Frontend] Build Docker image"
+    dir: frontend
+    cmds:
+      - docker-compose -f docker/docker-compose.yml build
+
+  docker:up:frontend:
+    desc: "[Frontend] Start Docker environment"
+    dir: frontend
+    cmds:
+      - docker-compose -f docker/docker-compose.yml up
+
+  docker:down:frontend:
+    desc: "[Frontend] Stop Docker environment"
+    dir: frontend
+    cmds:
+      - docker-compose -f docker/docker-compose.yml down
+
+  # === Backend専用操作 ===
+  install:backend:
     desc: "[Backend] Install dependencies using uv"
     dir: backend
     cmds:
       - uv sync --group dev
 
-  dev:
+  dev:backend:
     desc: "[Backend] Start development server"
     dir: backend
     cmds:
       - uv run uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
 
-  lint:
-    desc: "[Backend] Run linting with ruff"
+  build:backend:
+    desc: "[Backend] Build backend (placeholder)"
     dir: backend
     cmds:
-      - uv run ruff check .
+      - echo "Backend build completed"
 
-  lint:fix:
-    desc: "[Backend] Run linting with ruff and auto-fix issues"
-    dir: backend
-    cmds:
-      - uv run ruff check . --fix
-
-  format:
-    desc: "[Backend] Format code with ruff"
-    dir: backend
-    cmds:
-      - uv run ruff format .
-
-  format:check:
-    desc: "[Backend] Check code formatting without making changes"
-    dir: backend
-    cmds:
-      - uv run ruff format . --check
-
-  test:
+  test:backend:
     desc: "[Backend] Run tests with pytest"
     dir: backend
     cmds:
       - uv run pytest
 
-  typecheck:
-    desc: "[Backend] Run type checking with mypy"
+  check:backend:
+    desc: "[Backend] Run all code quality checks"
     dir: backend
     cmds:
+      - uv run ruff check .
+      - uv run ruff format . --check
       - uv run mypy src
 
-  check:all:
-    desc: "[Backend] Run all code quality checks (lint, format, typecheck)"
+  clean:backend:
+    desc: "[Backend] Clean generated files"
     dir: backend
     cmds:
-      - task lint
-      - task format:check
-      - task typecheck
-      - echo "✅ すべてのコード品質チェックが完了しました"
+      - rm -rf .pytest_cache .mypy_cache .ruff_cache __pycache__
+      - find . -name "*.pyc" -delete
 
-  fix:all:
-    desc: "[Backend] Auto-fix all possible issues (lint + format)"
-    dir: backend
+  docker:build:backend:
+    desc: "[Backend] Build Docker image"
     cmds:
-      - echo "🔧 コード品質の自動修正を開始..."
-      - task lint:fix
-      - task format
-      - echo "✅ 自動修正が完了しました。型チェックを実行してください - task typecheck"
+      - task -d backend docker:build
+
+  docker:up:backend:
+    desc: "[Backend] Start Docker environment"
+    cmds:
+      - task -d backend docker:up
+
+  docker:down:backend:
+    desc: "[Backend] Stop Docker environment (includes database)"
+    cmds:
+      - task -d backend docker:down
 
   # マイグレーション関連
   migrate:
-    desc: Run auto migration (generate + upgrade)
+    desc: "[Backend] Run auto migration (generate + upgrade)"
     dir: backend
     cmds:
       - uv run python -m src.script.auto_migrate
 
   migrate:generate:
-    desc: Generate migration only (no upgrade)
+    desc: "[Backend] Generate migration only (no upgrade)"
     dir: backend
     cmds:
       - uv run python -m src.script.auto_migrate --no-upgrade
 
   migrate:status:
-    desc: Show migration status
+    desc: "[Backend] Show migration status"
     dir: backend
     cmds:
       - uv run python -m src.script.auto_migrate --status
 
   migrate:upgrade:
-    desc: Upgrade database to latest migration
+    desc: "[Backend] Upgrade database to latest migration"
     dir: backend
     cmds:
       - uv run alembic upgrade head
 
   migrate:downgrade:
-    desc: Safely rollback database by one migration (with file integrity check)
+    desc: "[Backend] Safely rollback database by one migration"
     dir: backend
     cmds:
       - uv run python -m src.script.migration_safety --downgrade
 
-  migrate:downgrade:force:
-    desc: Force rollback database by one migration (skip integrity check)
-    dir: backend
-    cmds:
-      - echo "⚠️  強制巻き戻し（ファイル整合性チェックをスキップ）"
-      - uv run alembic downgrade -1
-
   migrate:check:
-    desc: Check migration files integrity
+    desc: "[Backend] Check migration files integrity"
     dir: backend
     cmds:
       - uv run python -m src.script.migration_safety --check-only
 
   migrate:reset:
-    desc: Reset database to base (remove all migrations)
+    desc: "[Backend] Reset database to base (remove all migrations)"
     dir: backend
     cmds:
       - echo "⚠️  データベースを初期状態にリセットします"
       - uv run alembic downgrade base
-      - echo "✅ データベースリセット完了（全てのマイグレーションが削除されました）"
+      - echo "✅ データベースリセット完了"
 
   migrate:history:
-    desc: Show migration history
+    desc: "[Backend] Show migration history"
     dir: backend
     cmds:
       - uv run alembic history
-
-  docker:build:
-    desc: "[Backend] Build Docker image"
-    cmds:
-      - docker compose -f backend/docker/docker-compose.yml build
-
-  docker:up:
-    desc: "[Backend] Start Docker containers"
-    cmds:
-      - docker compose -f backend/docker/docker-compose.yml up
-
-  docker:down:
-    desc: "[Backend] Stop Docker containers"
-    cmds:
-      - docker compose -f backend/docker/docker-compose.yml down
-
-  docker:db:
-    desc: "[Backend] Start only database container (lightweight option)"
-    cmds:
-      - docker compose -f backend/docker/docker-compose.yml up db
-
-  docker:db:detached:
-    desc: "[Backend] Start only database container in background"
-    cmds:
-      - docker compose -f backend/docker/docker-compose.yml up -d db
-
-  clean:
-    desc: "[Backend] Clean up generated files"
-    dir: backend
-    cmds:
-      - rm -rf .pytest_cache
-      - rm -rf .mypy_cache
-      - rm -rf .ruff_cache
-      - rm -rf __pycache__
-      - find . -name "*.pyc" -delete
-      - find . -name "*.pyo" -delete

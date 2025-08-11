@@ -1,14 +1,18 @@
-**AIエージェント利用時、開発開始プロンプトメモ**
-Kiro用
+**AI エージェント利用時、開発開始プロンプトメモ**
+Kiro 用
+
 ```bash
 リポジトリ直下のKIRO_PROMPT.mdを読み込み、記載された初期命令を実行してください。
 ```
-Claude Code用
+
+Claude Code 用
+
 ```bash
 ~/.claude/settings.local.jsonを読み込んで、リポジトリ直下のREADME.mdとCLAUDE.mdを確認後、担当領域を明確にしてから、該当する専用CLAUDE.mdを読み込んで待機して
 ```
 
-**Kiro関連ファイルのgit管理**
+**Kiro 関連ファイルの git 管理**
+
 ```bash
 # .kiro/prompts*はすでにgit追跡に含まれているため、命令プロンプトドキュメントを無視するコマンドを実行する必要があります
 git update-index --assume-unchanged .kiro/prompts/*
@@ -16,22 +20,31 @@ git update-index --assume-unchanged .kiro/prompts/*
 
 # Next.js + FastAPI Template
 
-モダンなフルスタックWebアプリケーション開発のためのテンプレートリポジトリです。Next.js 15とFastAPIを組み合わせ、型安全性と開発効率を重視した構成になっています。
+モダンなフルスタック Web アプリケーション開発のためのテンプレートリポジトリです。Next.js 15 と FastAPI を組み合わせ、型安全性と開発効率を重視した構成になっています。
 
 ## 🚀 概要
 
 このテンプレートは、以下の特徴を持つフルスタックアプリケーションの迅速な開発を支援します：
 
-- **型安全性**: TypeScript（フロントエンド）とPython型ヒント（バックエンド）による完全な型安全性
+- **型安全性**: TypeScript（フロントエンド）と Python 型ヒント（バックエンド）による完全な型安全性
 - **モダンな技術スタック**: 最新のフレームワークとツールを採用
 - **開発効率**: 自動化されたマイグレーション、リンティング、フォーマット
-- **プロダクション対応**: Docker、CI/CD対応の本格的な構成
+- **プロダクション対応**: Docker、CI/CD 対応の本格的な構成
 
 ## 📁 プロジェクト構成
 
 ```
 nextjs-fastapi-template/
+├── .mise.toml                  # 統合ツールバージョン管理
+├── Taskfile.yml                # 統合タスクランナー設定
+├── CLAUDE.md                   # AI開発ガイドライン
+├── TROUBLESHOOTING.md          # 包括的トラブルシューティング
 ├── frontend/                   # Next.js フロントエンド
+│   ├── .mise.toml             # フロントエンド固有設定
+│   ├── Taskfile.yml           # フロントエンド専用タスク
+│   ├── docker/                # フロントエンドDocker設定
+│   │   ├── Dockerfile
+│   │   └── docker-compose.yml
 │   ├── src/
 │   │   ├── app/               # Next.js App Router
 │   │   ├── components/        # Reactコンポーネント
@@ -39,18 +52,34 @@ nextjs-fastapi-template/
 │   ├── package.json
 │   └── README.md              # フロントエンド詳細ドキュメント
 ├── backend/                    # FastAPI バックエンド
+│   ├── .mise.toml             # バックエンド固有設定
+│   ├── Taskfile.yml           # バックエンド専用タスク
+│   ├── docker/                # バックエンドDocker設定
+│   │   ├── Dockerfile
+│   │   └── docker-compose.yml
 │   ├── src/
 │   │   ├── main.py           # FastAPIアプリケーション
 │   │   ├── db/               # データベース関連
+│   │   │   ├── migrations/   # Alembicマイグレーション
+│   │   │   └── models/       # SQLAlchemyモデル
 │   │   └── script/           # ユーティリティスクリプト
+│   │       └── auto_migrate/ # 自動マイグレーションツール
 │   ├── pyproject.toml
 │   └── README.md              # バックエンド詳細ドキュメント
-└── README.md                   # このファイル
+└── README.md                   # このファイル（統合ガイド）
 ```
+
+### 統合環境の特徴
+
+- **mise 統一管理**: プロジェクト直下で全ツールのバージョン統一管理
+- **Task 統合実行**: `task dev`で両方同時起動、`task dev:backend`で個別実行
+- **Docker 分離環境**: 各環境独立したコンテナ設定
+- **後方互換性**: 既存のサブディレクトリでの開発も継続可能
 
 ## 🛠️ 技術スタック
 
 ### フロントエンド
+
 - **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS v4
@@ -60,6 +89,7 @@ nextjs-fastapi-template/
 - **Package Manager**: Bun
 
 ### バックエンド
+
 - **Framework**: FastAPI
 - **Language**: Python 3.11
 - **Database**: PostgreSQL
@@ -67,146 +97,231 @@ nextjs-fastapi-template/
 - **Migration**: Alembic + 自動マイグレーションツール
 - **Code Quality**: Ruff (linting & formatting) + mypy (type checking)
 - **Package Manager**: uv
-- **Task Runner**: Task
 
 ### 開発環境・インフラ
+
 - **Version Management**: mise
+- **Task Runner**: Task
 - **Containerization**: Docker + Docker Compose
 - **Git Hooks**: Lefthook (frontend) + 品質チェック自動化
 
 ## ⚡ クイックスタート
 
 ### 前提条件
+
 - **mise**: ツールバージョン管理 ([インストール方法](https://mise.jdx.dev/getting-started.html))
 - **Docker & Docker Compose**: コンテナ環境
-- Node.js 18.18.0 以上（miseで管理）
-- Python 3.11 以上（miseで管理）
-- Bun 1.1.8（miseで管理）
-- Task（miseで管理）
 
-**mise統一環境**: このプロジェクトではmiseを使用してフロントエンドとバックエンドのツールバージョンを統一管理し、Taskによる一貫したコマンド体系を実現しています。
+**統合開発環境**: このプロジェクトでは mise を使用してフロントエンドとバックエンドのツールバージョンを統一管理し、Task による一貫したコマンド体系を実現しています。
 
 ### 1. リポジトリのクローン
+
 ```bash
 git clone https://github.com/Hol1kgmg/nextjs-fastAPI-templete.git
 cd nextjs-fastAPI-templete
 ```
 
-### 2. フロントエンド環境構築
+### 2. 統合環境セットアップ（推奨）
+
+**最速で開発を開始する方法**:
+
+1. **環境セットアップ（1 分）**:
+
+   ```bash
+   git clone https://github.com/Hol1kgmg/nextjs-fastAPI-templete.git
+   cd nextjs-fastAPI-templete
+   mise install
+   task install
+   ```
+
+2. **環境設定ファイルの作成（30 秒）**:
+
+   ```bash
+   # バックエンド環境設定
+   cp backend/.env.sample backend/.env
+
+   # フロントエンド環境設定
+   cp frontend/.env.sample frontend/.env
+   ```
+
+3. **フルスタック開発開始（30 秒）**:
+
+   ```bash
+   task docker:up:db
+   task dev
+   ```
+
+   - フロントエンド: http://localhost:3000
+   - バックエンド: http://localhost:8000
+   - Adminer (DEBUG=true の場合): http://localhost:8080/?pgsql=db&username=user&db=mydb&ns=public
+
+4. **品質チェック（30 秒）**:
+   ```bash
+   task check:all
+   ```
+
+**開発パターン別コマンド**:
+
+| 開発パターン       | コマンド                                | 説明                       |
+| ------------------ | --------------------------------------- | -------------------------- |
+| フルスタック開発   | `task dev`                              | 両方同時起動               |
+| バックエンド専用   | `task dev:backend`                      | バックエンドのみ           |
+| フロントエンド専用 | `task dev:frontend`                     | フロントエンドのみ         |
+| 軽量バックエンド   | `task docker:up:db && task dev:backend` | DB コンテナ + 開発サーバー |
+
+**初回 mise セットアップが必要な場合**:
+
 ```bash
-cd frontend
+# miseのインストール（初回のみ）
+brew install mise  # macOSの場合
+# または
+curl https://mise.run | sh
 
-# mise環境セットアップ
-mise install     # Node.js, Bun, Taskをインストール
-task install     # 依存関係インストール
-task dev         # 開発サーバー起動
+# miseのシェル統合（初回のみ）
+echo 'eval "$(mise activate --shims zsh)"' >> ~/.zshrc  # zshの場合
+source ~/.zshrc
 
-# または従来の方法
-bun install
-bun run dev
+# Pythonバージョンファイルサポートの有効化（初回のみ）
+mise settings add idiomatic_version_file_enable_tools python
 ```
-詳細は [`frontend/README.md`](./frontend/README.md) を参照
 
-### フロントエンドmise環境
+### 3. 個別環境での開発
 
-フロントエンドでmiseによるツールバージョン管理が利用可能です：
+**バックエンドのみ開発する場合**:
 
 ```bash
-# フロントエンドディレクトリに移動
-cd frontend
+# データベースのみ起動（軽量）
+task docker:up:db
 
-# mise環境セットアップ
+# バックエンド開発サーバー起動
+task dev:backend
+```
+
+**フロントエンドのみ開発する場合**:
+
+```bash
+# フロントエンド開発サーバー起動
+task dev:frontend
+```
+
+### 4. 従来の方法（後方互換性）
+
+既存の開発者は従来通りの方法も継続利用可能：
+
+**バックエンド**:
+
+```bash
+cd backend
 mise install
 task install
 task dev
 ```
 
-詳細は [`frontend/README.md`](./frontend/README.md) の「mise環境での開発」セクションを参照してください。
-
-### フロントエンドDocker環境
-
-フロントエンドのDockerコンテナ構築が利用可能です：
+**フロントエンド**:
 
 ```bash
-# フロントエンドディレクトリに移動
 cd frontend
-
-# Dockerイメージをビルド
-task docker:build
-
-# コンテナを起動
-task docker:run
-
-# ログを確認
-task docker:logs
-
-# コンテナを停止
-task docker:stop
+mise install
+task install
+task dev
 ```
 
-詳細は [`frontend/README.md`](./frontend/README.md) の「Docker デプロイメント」セクションを参照してください。
-
-### 3. バックエンド環境構築
-
-**重要**: バックエンドの環境構築は複数のステップと環境設定が必要なため、AIではなく**開発者自身が手動で実行**することを強く推奨します。
+### 5. 便利なコマンド
 
 ```bash
-cd backend
-# 詳細な環境構築手順は backend/README.md を必ず確認してください
+# 統合品質チェック
+task check:all
+
+# 統合テスト実行
+task test
+
+# 統合ビルド
+task build
+
+# 統合クリーンアップ
+task clean
+
+# Docker環境管理
+task docker:up:db      # データベースのみ
+task docker:up         # 全Docker環境
+task docker:down       # 全Docker環境停止
+
+# マイグレーション管理（バックエンド）
+task migrate           # 自動マイグレーション（生成＋適用）
+task migrate:status    # 現在のマイグレーション状態確認
+task migrate:history   # マイグレーション履歴表示
+task migrate:generate  # マイグレーション生成のみ
+task migrate:upgrade   # 手動アップグレード
+task migrate:downgrade # 1つ前にダウングレード
 ```
-
-**mise統一環境の利点**:
-- フロントエンドとバックエンドで同じコマンド体系
-- ツールバージョンの統一管理と一貫性保証
-- Taskでの統合された品質チェックと自動修正
-
-**注意事項**:
-- `mise install` や `task install` 実行直後は、コマンドが適切に使用できない場合があります
-- `task docker:up` の前に `task docker:build` が必要な場合があります
-- 環境によってはターミナルの再起動やシェル設定の更新が必要です
-
-詳細な手順と注意点は [`backend/README.md`](./backend/README.md) を参照し、段階的に環境構築を進めてください。
 
 ## 🔧 問題が発生した場合
 
 初回環境構築や開発中に問題が発生した場合は、**[📋 TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** を参照してください。
 
-**よくある問題**:
-- Docker関連のポート競合・権限エラー
+### 🔧 統合環境のトラブルシューティング
+
+### よくある問題
+
+**mise 環境の問題**:
+
+- `mise install`後にコマンドが見つからない → ターミナル再起動
+- ツールバージョンが期待と異なる → `mise list`で確認、`mise use`で修正
+
+**Task 統合環境の問題**:
+
+- `task dev`で片方のサーバーが起動しない → 個別コマンド（`task dev:backend`）で原因特定
+- ポート競合エラー → 既存プロセスの確認・停止
+
+**Docker 統合環境の問題**:
+
+- `task docker:up:db`が失敗 → Docker Desktop の起動確認
+- データベース接続エラー → `task docker:logs:db`でログ確認
+
+### 従来の問題
+
+- Docker 関連のポート競合・権限エラー
 - パッケージインストール失敗
 - マイグレーション・データベース接続問題
 - コード品質ツールエラー
 
 各問題の詳細な解決方法と環境固有の対処法を網羅しています。
 
-問題が解決しない場合は、環境情報と共にGitHubでイシューを作成してください。
+問題が解決しない場合は、環境情報と共に GitHub でイシューを作成してください。
 
 ## 🌟 主な機能
 
 ### フロントエンド
-- **モダンなReact開発**: App Router、Server Components対応
-- **コンポーネント駆動開発**: Storybook統合
+
+- **モダンな React 開発**: App Router、Server Components 対応
+- **コンポーネント駆動開発**: Storybook 統合
 - **厳格なコード品質**: Biome + Lefthook による自動品質管理
-- **型安全なUI**: shadcn/ui + TypeScript
+- **型安全な UI**: shadcn/ui + TypeScript
 
 ### バックエンド
-- **高性能API**: FastAPI + 非同期処理
+
+- **高性能 API**: FastAPI + 非同期処理
 - **インテリジェントマイグレーション**: Decision Tree による自動ファイル命名
 - **包括的な型チェック**: mypy strict mode
 - **開発効率化**: 自動マイグレーション、ホットリロード
 
 ### 開発体験
-- **mise統一環境**: フロントエンド・バックエンド両方でのツールバージョン統一管理
-- **Task統一コマンド**: 一貫したコマンド体系による開発効率向上
-- **自動化されたワークフロー**: Git hooks、品質チェック
-- **包括的なドキュメント**: 各コンポーネントの詳細ガイド
+
+- **統合 mise 環境**: プロジェクト直下で全ツール（Python 3.11, Node.js 18.18.0, Bun 1.1.8, uv, Task）を統一管理
+- **統合 Task 環境**: 新しい命名規則による直感的なコマンド体系
+  - `task dev` = フロントエンド・バックエンド両方起動
+  - `task dev:backend` = バックエンドのみ起動
+  - `task dev:frontend` = フロントエンドのみ起動
+- **Docker 統合管理**: 分離環境での効率的なコンテナ管理
+- **後方互換性**: 既存の開発ワークフローを完全保持
+- **段階的移行**: 新機能を徐々に学習・採用可能
 
 ## 📚 ドキュメント
 
-各コンポーネントの詳細な情報は、それぞれのREADME.mdを参照してください：
+各コンポーネントの詳細な情報は、それぞれの README.md を参照してください：
 
-- **[フロントエンド詳細](./frontend/README.md)**: Next.js環境構築、開発方法、コンポーネント設計
-- **[バックエンド詳細](./backend/README.md)**: FastAPI環境構築、データベース設計、API開発
+- **[フロントエンド詳細](./frontend/README.md)**: Next.js 環境構築、開発方法、コンポーネント設計
+- **[バックエンド詳細](./backend/README.md)**: FastAPI 環境構築、データベース設計、API 開発
 - **[自動マイグレーションツール](./backend/src/script/auto_migrate/README.md)**: 高度なマイグレーション機能の詳細
 
 ## 🤝 開発ガイドライン
@@ -220,11 +335,11 @@ cd backend
 
 ## 📄 ライセンス
 
-このテンプレートはMITライセンスの下で公開されています。
+このテンプレートは MIT ライセンスの下で公開されています。
 
 ## 🚀 次のステップ
 
-1. 各コンポーネントのREADME.mdで詳細な環境構築を実行
+1. 各コンポーネントの README.md で詳細な環境構築を実行
 2. サンプルコードを参考に、独自の機能を実装
 3. 必要に応じて技術スタックをカスタマイズ
 

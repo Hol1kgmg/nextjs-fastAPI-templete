@@ -2,78 +2,78 @@ version: '3'
 
 tasks:
   list:
-    desc: "[Frontend] Display available task commands for frontend"
+    desc: "Display available task commands for frontend"
     cmds:
       - echo "📋 Available frontend task commands:"
       - task --list
 
   install:
-    desc: "[Frontend] Install dependencies using Bun"
+    desc: "Install dependencies using Bun"
     cmds:
       - bun install
 
   # Basic commands
   dev:
-    desc: "[Frontend] Start development server (Next.js)"
+    desc: "Start development server (Next.js)"
     cmds:
       - bun run dev
 
   build:
-    desc: "[Frontend] Build production application"
+    desc: "Build production application"
     cmds:
       - bun run build
 
   start:
-    desc: "[Frontend] Start production server"
+    desc: "Start production server"
     cmds:
       - bun run start
 
   # Code quality commands
   check:
-    desc: "[Frontend] Run Biome linter and formatter checks"
+    desc: "Run Biome linter and formatter checks"
     cmds:
       - bun run check
 
   check:fix:
-    desc: "[Frontend] Run Biome auto-fix (including unsafe fixes)"
+    desc: "Run Biome auto-fix (including unsafe fixes)"
     cmds:
       - bun run check:fix
 
   format:
-    desc: "[Frontend] Check code formatting with Biome"
+    desc: "Check code formatting with Biome"
     cmds:
       - bun run format
 
   format:fix:
-    desc: "[Frontend] Auto-format code with Biome"
+    desc: "Auto-format code with Biome"
     cmds:
       - bun run format:fix
 
   typecheck:
-    desc: "[Frontend] Run TypeScript type checking"
+    desc: "Run TypeScript type checking"
     cmds:
       - bun run typecheck
 
   # Test commands
   test:
-    desc: "[Frontend] Run tests once with Vitest"
+    desc: "Run tests once with Vitest"
     cmds:
       - bun run test
 
   # Storybook commands
   storybook:
-    desc: "[Frontend] Start Storybook development server"
+    desc: "Start Storybook development server"
     cmds:
       - bun run storybook
 
   build-storybook:
-    desc: "[Frontend] Build Storybook"
+    desc: "Build Storybook"
     cmds:
       - bun run build-storybook
 
   # Integrated quality checks
   check:all:
-    desc: "[Frontend] Run all code quality checks (check, format, typecheck)"
+    desc: "Run all code quality checks (check, format, typecheck)"
     cmds:
       - task check
       - task format
@@ -81,7 +81,7 @@ tasks:
       - echo "✅ All code quality checks completed"
 
   fix:all:
-    desc: "[Frontend] Run integrated auto-fix (check:fix + format:fix)"
+    desc: "Run integrated auto-fix (check:fix + format:fix)"
     cmds:
       - echo "🔧 Starting code quality auto-fix..."
       - task check:fix
@@ -90,12 +90,12 @@ tasks:
 
   # Docker関連タスク
   docker:build:
-    desc: "[Frontend] Build Docker image"
+    desc: "Build Docker image"
     cmds:
       - docker build -f docker/Dockerfile -t frontend:latest .
 
   docker:run:
-    desc: "[Frontend] Run Docker container"
+    desc: "Run Docker container"
     cmds:
       - docker run -d -p 3000:3000 --name frontend-app 
         --env-file docker/.env.docker
@@ -103,29 +103,29 @@ tasks:
         frontend:latest
 
   docker:stop:
-    desc: "[Frontend] Stop Docker container"
+    desc: "Stop Docker container"
     cmds:
       - docker stop frontend-app || true
       - docker rm frontend-app || true
 
   docker:logs:
-    desc: "[Frontend] Show Docker container logs"
+    desc: "Show Docker container logs"
     cmds:
       - docker logs frontend-app
 
   docker:shell:
-    desc: "[Frontend] Access Docker container shell"
+    desc: "Access Docker container shell"
     cmds:
       - docker exec -it frontend-app sh
 
   docker:clean:
-    desc: "[Frontend] Clean Docker images and volumes"
+    desc: "Clean Docker images and volumes"
     cmds:
       - docker rmi frontend:latest || true
       - docker volume rm npm-cache || true
 
   clean:
-    desc: "[Frontend] Clean generated files"
+    desc: "Clean generated files"
     cmds:
       - rm -rf .next
       - rm -rf node_modules/.cache

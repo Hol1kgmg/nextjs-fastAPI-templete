@@ -1,71 +1,138 @@
 version: '3'
 
-# 統合タスク（フルスタック - 両方実行）
+# === 共通操作（フルスタック統合タスク） ===
 tasks:
   list:
     desc: "task command lists"
     cmds:
       - task --list
+
   install:
-    desc: "[Fullstack] Install all dependencies"
+    desc: "Install all dependencies"
     cmds:
       - task install:backend
       - task install:frontend
 
   dev:
-    desc: "[Fullstack] Start both frontend and backend development servers"
+    desc: "Start both frontend and backend development servers"
     deps: [dev:backend, dev:frontend]
 
   build:
-    desc: "[Fullstack] Build both frontend and backend"
+    desc: "Build both frontend and backend"
     cmds:
       - task build:backend
       - task build:frontend
 
   test:
-    desc: "[Fullstack] Run all tests"
+    desc: "Run all tests"
     cmds:
       - task test:backend
       - task test:frontend
 
   check:all:
-    desc: "[Fullstack] Run all quality checks"
+    desc: "Run all quality checks"
     cmds:
       - task check:backend
       - task check:frontend
 
   clean:
-    desc: "[Fullstack] Clean all generated files"
+    desc: "Clean all generated files"
     cmds:
       - task clean:backend
       - task clean:frontend
 
-  # Docker統合タスク（全環境）
+  # === Docker含む共通操作 ===
   docker:build:
-    desc: "[Docker] Build all Docker images"
+    desc: "Build all Docker images"
     cmds:
       - task docker:build:backend
       - task docker:build:frontend
 
   docker:up:
-    desc: "[Docker] Start all Docker environments"
+    desc: "Start all Docker environments"
     cmds:
       - task docker:up:backend
       - task docker:up:frontend
 
   docker:down:
-    desc: "[Docker] Stop all Docker environments"
+    desc: "Stop all Docker environments"
     cmds:
       - task docker:down:backend
       - task docker:down:frontend
 
-  # Docker個別サービスタスク
   docker:up:db:
-    desc: "[Docker] Start database container (auto-detect DEBUG mode)"
+    desc: "Start database container (auto-detect DEBUG mode)"
     cmds:
       - task -d backend docker:db:detached
 
-  # バックエンド個別タスク
+  docker:logs:db:
+    desc: "Show database container logs"
+    cmds:
+      - task -d backend docker:logs:db
+
+  docker:restart:db:
+    desc: "Restart database container"
+    cmds:
+      - task -d backend docker:restart:db
+
+  # === Frontend専用操作 ===
+  install:frontend:
+    desc: "[Frontend] Install dependencies using Bun"
+    dir: frontend
+    cmds:
+      - bun install
+
+  dev:frontend:
+    desc: "[Frontend] Start development server"
+    dir: frontend
+    cmds:
+      - bun run dev
+
+  build:frontend:
+    desc: "[Frontend] Build production application"
+    dir: frontend
+    cmds:
+      - bun run build
+
+  test:frontend:
+    desc: "[Frontend] Run tests"
+    dir: frontend
+    cmds:
+      - bun run test
+
+  check:frontend:
+    desc: "[Frontend] Run all quality checks"
+    dir: frontend
+    cmds:
+      - bun run check
+      - bun run format
+      - bun run typecheck
+
+  clean:frontend:
+    desc: "[Frontend] Clean generated files"
+    dir: frontend
+    cmds:
+      - rm -rf .next node_modules/.cache dist storybook-static
+
+  docker:build:frontend:
+    desc: "[Frontend] Build Docker image"
+    dir: frontend
+    cmds:
+      - docker-compose -f docker/docker-compose.yml build
+
+  docker:up:frontend:
+    desc: "[Frontend] Start Docker environment"
+    dir: frontend
+    cmds:
+      - docker-compose -f docker/docker-compose.yml up
+
+  docker:down:frontend:
+    desc: "[Frontend] Stop Docker environment"
+    dir: frontend
+    cmds:
+      - docker-compose -f docker/docker-compose.yml down
+
+  # === Backend専用操作 ===
   install:backend:
     desc: "[Backend] Install dependencies using uv"
     dir: backend
@@ -105,92 +172,22 @@ tasks:
       - rm -rf .pytest_cache .mypy_cache .ruff_cache __pycache__
       - find . -name "*.pyc" -delete
 
-  # バックエンドDocker個別タスク
   docker:build:backend:
-    desc: "[Backend] Build backend Docker image"
+    desc: "[Backend] Build Docker image"
     cmds:
       - task -d backend docker:build
 
   docker:up:backend:
-    desc: "[Backend] Start backend Docker environment"
+    desc: "[Backend] Start Docker environment"
     cmds:
       - task -d backend docker:up
 
   docker:down:backend:
-    desc: "[Backend] Stop backend Docker environment (includes database)"
+    desc: "[Backend] Stop Docker environment (includes database)"
     cmds:
       - task -d backend docker:down
 
-  # フロントエンド個別タスク
-  install:frontend:
-    desc: "[Frontend] Install dependencies using Bun"
-    dir: frontend
-    cmds:
-      - bun install
-
-  dev:frontend:
-    desc: "[Frontend] Start development server"
-    dir: frontend
-    cmds:
-      - bun run dev
-
-  build:frontend:
-    desc: "[Frontend] Build production application"
-    dir: frontend
-    cmds:
-      - bun run build
-
-  test:frontend:
-    desc: "[Frontend] Run tests"
-    dir: frontend
-    cmds:
-      - bun run test
-
-  check:frontend:
-    desc: "[Frontend] Run all quality checks"
-    dir: frontend
-    cmds:
-      - bun run check
-      - bun run format
-      - bun run typecheck
-
-  clean:frontend:
-    desc: "[Frontend] Clean generated files"
-    dir: frontend
-    cmds:
-      - rm -rf .next node_modules/.cache dist storybook-static
-
-  # フロントエンドDocker個別タスク
-  docker:build:frontend:
-    desc: "[Frontend] Build frontend Docker image"
-    dir: frontend
-    cmds:
-      - docker-compose -f docker/docker-compose.yml build
-
-  docker:up:frontend:
-    desc: "[Frontend] Start frontend Docker environment"
-    dir: frontend
-    cmds:
-      - docker-compose -f docker/docker-compose.yml up
-
-  docker:down:frontend:
-    desc: "[Frontend] Stop frontend Docker environment"
-    dir: frontend
-    cmds:
-      - docker-compose -f docker/docker-compose.yml down
-
-  # 追加のDocker便利タスク
-  docker:logs:db:
-    desc: "[Docker] Show database container logs"
-    cmds:
-      - task -d backend docker:logs:db
-
-  docker:restart:db:
-    desc: "[Docker] Restart database container"
-    cmds:
-      - task -d backend docker:restart:db
-
-  # バックエンドマイグレーション関連（個別タスクとして維持）
+  # マイグレーション関連
   migrate:
     desc: "[Backend] Run auto migration (generate + upgrade)"
     dir: backend

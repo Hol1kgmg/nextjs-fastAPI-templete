@@ -4,52 +4,52 @@ version: '3'
 
 tasks:
   install:
-    desc: "[Backend] Install dependencies using uv"
+    desc: "Install dependencies using uv"
     cmds:
       - uv sync --group dev
 
   dev:
-    desc: "[Backend] Start development server"
+    desc: "Start development server"
     cmds:
       - uv run uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
 
   build:
-    desc: "[Backend] Build backend (placeholder)"
+    desc: "Build backend (placeholder)"
     cmds:
       - echo "Backend build completed"
 
   test:
-    desc: "[Backend] Run tests with pytest"
+    desc: "Run tests with pytest"
     cmds:
       - uv run pytest
 
   lint:
-    desc: "[Backend] Run linting with ruff"
+    desc: "Run linting with ruff"
     cmds:
       - uv run ruff check .
 
   lint:fix:
-    desc: "[Backend] Run linting with ruff and auto-fix issues"
+    desc: "Run linting with ruff and auto-fix issues"
     cmds:
       - uv run ruff check . --fix
 
   format:
-    desc: "[Backend] Format code with ruff"
+    desc: "Format code with ruff"
     cmds:
       - uv run ruff format .
 
   format:check:
-    desc: "[Backend] Check code formatting without making changes"
+    desc: "Check code formatting without making changes"
     cmds:
       - uv run ruff format . --check
 
   typecheck:
-    desc: "[Backend] Run type checking with mypy"
+    desc: "Run type checking with mypy"
     cmds:
       - uv run mypy src
 
   check:all:
-    desc: "[Backend] Run all code quality checks (lint, format, typecheck)"
+    desc: "Run all code quality checks (lint, format, typecheck)"
     cmds:
       - task lint
       - task format:check
@@ -57,7 +57,7 @@ tasks:
       - echo "✅ すべてのコード品質チェックが完了しました"
 
   fix:all:
-    desc: "[Backend] Auto-fix all possible issues (lint + format)"
+    desc: "Auto-fix all possible issues (lint + format)"
     cmds:
       - echo "🔧 コード品質の自動修正を開始..."
       - task lint:fix
@@ -115,12 +115,12 @@ tasks:
 
   # Docker関連
   docker:build:
-    desc: "[Backend] Build Docker image"
+    desc: "Build Docker image"
     cmds:
       - docker-compose -f docker/docker-compose.yml build
 
   docker:up:
-    desc: "[Backend] Start Docker containers (auto-detect DEBUG mode)"
+    desc: "Start Docker containers (auto-detect DEBUG mode)"
     dotenv: ['.env']
     cmds:
       - |
@@ -133,12 +133,12 @@ tasks:
         fi
 
   docker:down:
-    desc: "[Backend] Stop Docker containers"
+    desc: "Stop Docker containers"
     cmds:
       - docker-compose -f docker/docker-compose.yml down
 
   docker:db:
-    desc: "[Backend] Start only database container (auto-detect DEBUG mode)"
+    desc: "Start only database container (auto-detect DEBUG mode)"
     dotenv: ['.env']
     cmds:
       - |
@@ -151,7 +151,7 @@ tasks:
         fi
 
   docker:db:detached:
-    desc: "[Backend] Start database container in background (auto-detect DEBUG mode)"
+    desc: "Start database container in background (auto-detect DEBUG mode)"
     dotenv: ['.env']
     cmds:
       - |
@@ -164,17 +164,17 @@ tasks:
         fi
 
   docker:logs:db:
-    desc: "[Backend] Show database container logs"
+    desc: "Show database container logs"
     cmds:
       - docker-compose -f docker/docker-compose.yml logs -f db
 
   docker:restart:db:
-    desc: "[Backend] Restart database container"
+    desc: "Restart database container"
     cmds:
       - docker-compose -f docker/docker-compose.yml restart db
 
   clean:
-    desc: "[Backend] Clean up generated files"
+    desc: "Clean up generated files"
     cmds:
       - rm -rf .pytest_cache
       - rm -rf .mypy_cache

@@ -9,3 +9,7 @@ bun = "1.1.8"
 
 # 共通ツール
 task = "latest"
+lefthook = "latest"
+
+# コード分析ツール
+rust = "latest"  # similarity-tsインストール用

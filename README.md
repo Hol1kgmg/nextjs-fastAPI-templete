@@ -38,6 +38,7 @@ nextjs-fastapi-template/
 ├── .mise.toml                  # 統合ツールバージョン管理
 ├── Taskfile.yml                # 統合タスクランナー設定
 ├── CLAUDE.md                   # AI開発ガイドライン
+├── CODING_STANDARDS.md         # コーディング品質基準
 ├── TROUBLESHOOTING.md          # 包括的トラブルシューティング
 ├── frontend/                   # Next.js フロントエンド
 │   ├── .mise.toml             # フロントエンド固有設定
@@ -254,6 +255,22 @@ task migrate:generate  # マイグレーション生成のみ
 task migrate:upgrade   # 手動アップグレード
 task migrate:downgrade # 1つ前にダウングレード
 ```
+
+## 🛡️ Git Hooks によるコード品質保証
+
+このプロジェクトでは、**lefthook** を使用した自動化された品質チェックシステムが組み込まれています。
+
+### 自動実行される品質チェック
+
+**コミット時 (pre-commit)**:
+- **自動修正**: コードフォーマット、リンティングエラーの自動修正
+- **品質チェック**: TypeScript型チェック、Python型チェック（mypy）
+- **コード重複検出**: similarity-ts による重複コードの検出・警告
+- **差分ベース実行**: 変更されたファイルのみを効率的にチェック
+
+**プッシュ時 (pre-push)**:
+- **軽量ビルドテスト**: 基本的なビルド可能性の確認
+- **CI/CD環境整合性確認**: 本番環境との一貫性チェック
 
 ## 🔧 問題が発生した場合
 

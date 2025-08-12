@@ -8,10 +8,12 @@ tasks:
       - task --list
 
   install:
-    desc: "Install all dependencies"
+    desc: "Install all dependencies and setup Git hooks"
     cmds:
       - task install:backend
       - task install:frontend
+      - task install:similarity
+      - task install:hooks
 
   dev:
     desc: "Start both frontend and backend development servers"
@@ -40,6 +42,20 @@ tasks:
     cmds:
       - task clean:backend
       - task clean:frontend
+
+  install:similarity:
+    desc: "Install similarity-ts via mise"
+    cmds:
+      - mise exec -- cargo install similarity-ts
+
+  install:hooks:
+    desc: "Install Git hooks using lefthook"
+    cmds:
+      - |
+        echo "🔧 Setting up Git hooks..."
+        lefthook install
+        echo "✅ Git hooks installed successfully"
+        echo "ℹ️  Quality checks will now run automatically on commit and push"
 
   # === Docker含む共通操作 ===
   docker:build:

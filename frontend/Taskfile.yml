@@ -124,6 +124,12 @@ tasks:
       - docker rmi frontend:latest || true
       - docker volume rm npm-cache || true
 
+  # shadcn/ui commands
+  ui:add:
+    desc: "Add shadcn/ui component"
+    cmds:
+      - bunx shadcn@latest add {{.CLI_ARGS}}
+
   clean:
     desc: "Clean generated files"
     cmds:

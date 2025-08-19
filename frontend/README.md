@@ -42,17 +42,17 @@ mise trust && mise install
 
 # 依存関係のインストール
 task install
-# または
+# 従来の方法（後方互換性）
 bun install
 ```
 
 ### 開発サーバーの起動
 
 ```bash
-# Taskを使用（推奨）
+# Task統一コマンド（推奨）
 task dev
 
-# または従来の方法
+# 従来の方法（後方互換性）
 bun run dev
 ```
 
@@ -97,8 +97,8 @@ src/
 
 Lefthookにより以下のフックが自動実行されます：
 
-- **Pre-commit**: `bun run check:fix` による自動修正
-- **Pre-push**: `bun run check` と `bun run typecheck` による品質チェック
+- **Pre-commit**: `task check:fix` による自動修正
+- **Pre-push**: `task check` と `task typecheck` による品質チェック
 
 ## mise環境での開発
 
@@ -174,8 +174,8 @@ mise current
 mise list
 
 # バージョン確認
-task env:check     # または bun run env:check
-task env:mise      # または bun run env:mise
+task env:check
+task env:mise
 
 # Task一覧表示
 task --list
@@ -186,6 +186,10 @@ task --list
 shadcn/uiコンポーネントは `src/components/ui/` に配置されています。新しいコンポーネントを追加する場合：
 
 ```bash
+# Task統一コマンド（推奨）
+task ui:add [component-name]
+
+# 従来の方法（後方互換性）
 bunx shadcn@latest add [component-name]
 ```
 

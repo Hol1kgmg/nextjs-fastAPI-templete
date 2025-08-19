@@ -130,6 +130,12 @@ tasks:
     cmds:
       - rm -rf .next node_modules/.cache dist storybook-static
 
+  ui:add:
+    desc: "[Frontend] Add shadcn/ui component"
+    dir: frontend
+    cmds:
+      - task ui:add {{.CLI_ARGS}}
+
   docker:build:frontend:
     desc: "[Frontend] Build Docker image"
     dir: frontend

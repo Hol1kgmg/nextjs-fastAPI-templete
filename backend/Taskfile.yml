@@ -133,9 +133,9 @@ tasks:
         fi
 
   docker:down:
-    desc: "Stop Docker containers"
+    desc: "Stop Docker containers (including Adminer)"
     cmds:
-      - docker-compose -f docker/docker-compose.yml down
+      - COMPOSE_PROFILES=debug docker-compose -f docker/docker-compose.yml down
 
   docker:db:
     desc: "Start only database container (auto-detect DEBUG mode)"

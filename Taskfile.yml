@@ -160,6 +160,12 @@ tasks:
     cmds:
       - task format:fix
 
+  rebuild:frontend:
+    desc: "[Frontend] Clean .next cache and rebuild Next.js application"
+    dir: frontend
+    cmds:
+      - task rebuild
+
   clean:frontend:
     desc: "[Frontend] Clean generated files"
     dir: frontend

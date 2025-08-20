@@ -148,6 +148,7 @@ cd nextjs-fastAPI-templete
 3. **フルスタック開発開始（30 秒）**:
 
    ```bash
+   task docker:build
    task docker:up:db
    task dev
    ```
@@ -179,7 +180,7 @@ brew install mise  # macOSの場合
 curl https://mise.run | sh
 
 # miseのシェル統合（初回のみ）
-echo 'eval "$(mise activate --shims zsh)"' >> ~/.zshrc  # zshの場合
+echo 'eval "$(mise activate zsh)"' >> ~/.zshrc  # zshの場合
 source ~/.zshrc
 
 # Pythonバージョンファイルサポートの有効化（初回のみ）

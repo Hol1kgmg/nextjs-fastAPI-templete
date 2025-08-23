@@ -130,6 +130,15 @@ tasks:
     cmds:
       - bunx shadcn@latest add {{.CLI_ARGS}}
 
+  rebuild:
+    desc: "Clean .next cache and rebuild Next.js application"
+    cmds:
+      - echo "🧹 Cleaning .next cache..."
+      - rm -rf .next
+      - echo "🔨 Rebuilding Next.js application..."
+      - bun run build
+      - echo "✅ Rebuild completed successfully"
+
   clean:
     desc: "Clean generated files"
     cmds:

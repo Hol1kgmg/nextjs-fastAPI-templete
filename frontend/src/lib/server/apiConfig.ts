@@ -100,7 +100,7 @@ const validateUrl = (url: string): boolean => {
 // 用途: 設定の妥当性を詳細にチェック
 export const validateApiConfig = async (
 	config: ApiConfig,
-): Promise<Result.Result<true, ApiConfigError>> => {
+): Result.ResultAsync<true, ApiConfigError> => {
 	// URLバリデーション（統一: new URLのみ）
 	if (!validateUrl(config.baseUrl)) {
 		if (process.env.NODE_ENV !== "production") {
@@ -126,8 +126,9 @@ export const validateApiConfig = async (
 
 // バリデーション付き設定取得（Result.try使用）
 // 用途: 安全性を重視する場面での設定取得
-export const createSafeApiConfig = async (): Promise<
-	Result.Result<ApiConfig, ApiConfigError>
+export const createSafeApiConfig = async (): Result.ResultAsync<
+	ApiConfig,
+	ApiConfigError
 > => {
 	const baseUrl = process.env.API_BASE_URL;
 
@@ -168,7 +169,7 @@ export const fetchWithTimeout = async (
 	input: RequestInfo | URL,
 	init: RequestInit = {},
 	timeoutMs: number,
-): Promise<Result.Result<Response, Error>> => {
+): Result.ResultAsync<Response, Error> => {
 	const timeoutController = new AbortController();
 	const timeoutId = setTimeout(() => timeoutController.abort(), timeoutMs);
 
@@ -270,7 +271,7 @@ export const createApiCall = (config: ApiConfig) => {
 export const createSafeApiCall = async (
 	endpoint: string,
 	options: RequestInit = {},
-): Promise<Result.Result<Response, ApiConfigError | Error>> => {
+): Result.ResultAsync<Response, ApiConfigError | Error> => {
 	const configResult = await createSafeApiConfig();
 
 	if (!Result.isSuccess(configResult)) {

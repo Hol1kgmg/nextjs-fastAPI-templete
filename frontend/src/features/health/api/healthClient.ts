@@ -17,7 +17,7 @@ export class HealthApiClient {
 	 *
 	 * @returns Result型でラップされたHealthResponse
 	 */
-	async getHealth(): Promise<Result.Result<HealthResponse, HealthApiError>> {
+	getHealth(): Result.ResultAsync<HealthResponse, HealthApiError> {
 		// 共通基盤のclientApiCallを使用
 		const fetchPromise = clientApiCall<HealthResponse>("/health");
 

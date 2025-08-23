@@ -10,8 +10,9 @@ import type { ExampleResponse } from "../types/exampleTypes";
 /**
  * Example一覧を取得するServer Action
  */
-export const getExamplesAction = async (): Promise<
-	Result.Result<ExampleResponse[], ApiError>
+export const getExamplesAction = (): Result.ResultAsync<
+	ExampleResponse[],
+	ApiError
 > => {
 	return createApiAction<ExampleResponse[]>("/examples");
 };
@@ -19,8 +20,8 @@ export const getExamplesAction = async (): Promise<
 /**
  * 新しいExampleを作成するServer Action
  */
-export const createExampleAction = async (
+export const createExampleAction = (
 	data: Omit<ExampleResponse, "id" | "createdAt">,
-): Promise<Result.Result<ExampleResponse, ApiError>> => {
+): Result.ResultAsync<ExampleResponse, ApiError> => {
 	return createPostApiAction<typeof data, ExampleResponse>("/examples", data);
 };

@@ -26,10 +26,10 @@ import type { ApiError } from "@/types";
  * }
  * ```
  */
-export async function createApiAction<TResponse>(
+export function createApiAction<TResponse>(
 	endpoint: string,
 	options?: RequestInit,
-): Promise<Result.Result<TResponse, ApiError>> {
+): Result.ResultAsync<TResponse, ApiError> {
 	// API設定を取得
 	const config = getApiConfig();
 	const apiCall = createApiCall(config);
@@ -62,11 +62,11 @@ export async function createApiAction<TResponse>(
  * @param options - 追加のfetchオプション
  * @returns Result型でラップされたAPIレスポンス
  */
-export async function createPostApiAction<TRequest, TResponse>(
+export function createPostApiAction<TRequest, TResponse>(
 	endpoint: string,
 	data: TRequest,
 	options?: Omit<RequestInit, "method" | "body">,
-): Promise<Result.Result<TResponse, ApiError>> {
+): Result.ResultAsync<TResponse, ApiError> {
 	return createApiAction<TResponse>(endpoint, {
 		method: "POST",
 		body: JSON.stringify(data),
@@ -84,11 +84,11 @@ export async function createPostApiAction<TRequest, TResponse>(
  * @param options - 追加のfetchオプション
  * @returns Result型でラップされたAPIレスポンス
  */
-export async function createPutApiAction<TRequest, TResponse>(
+export function createPutApiAction<TRequest, TResponse>(
 	endpoint: string,
 	data: TRequest,
 	options?: Omit<RequestInit, "method" | "body">,
-): Promise<Result.Result<TResponse, ApiError>> {
+): Result.ResultAsync<TResponse, ApiError> {
 	return createApiAction<TResponse>(endpoint, {
 		method: "PUT",
 		body: JSON.stringify(data),
@@ -104,10 +104,10 @@ export async function createPutApiAction<TRequest, TResponse>(
  * @param options - 追加のfetchオプション
  * @returns Result型でラップされたAPIレスポンス
  */
-export async function createDeleteApiAction<TResponse = void>(
+export function createDeleteApiAction<TResponse = void>(
 	endpoint: string,
 	options?: Omit<RequestInit, "method">,
-): Promise<Result.Result<TResponse, ApiError>> {
+): Result.ResultAsync<TResponse, ApiError> {
 	return createApiAction<TResponse>(endpoint, {
 		method: "DELETE",
 		...options,

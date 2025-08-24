@@ -34,15 +34,17 @@ jobs:
           npm run typecheck
       
       - name: Build application
+        env:
+          API_BASE_URL: http://localhost:8000
         run: npm run build
       
       - name: Build Docker image
-        run: docker build -f docker/Dockerfile -t frontend:latest .
+        run: docker build -f docker/Dockerfile -t frontend:latest --build-arg API_BASE_URL=http://localhost:8000 .
       
       - name: Test Docker container
         run: |
           docker run -d -p 3000:3000 --name frontend-test \
-            -e BACKEND_API_URL=http://localhost:8000 \
+            -e API_BASE_URL=http://localhost:8000 \
             frontend:latest
           sleep 10
           curl -f http://localhost:3000 || exit 1

@@ -54,8 +54,12 @@ jobs:
           bun run typecheck
       
       - name: Build application
+        env:
+          API_BASE_URL: http://localhost:8000
         run: bun run build
       
       - name: Run tests (if test files exist)
+        env:
+          API_BASE_URL: http://localhost:8000
         run: bun run test || echo "No test files found, skipping tests"
         continue-on-error: true

@@ -5,11 +5,13 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
+      args:
+        - API_BASE_URL=${API_BASE_URL:-http://localhost:8000}
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - BACKEND_API_URL=${BACKEND_API_URL:-https://api.example.com}
+      - API_BASE_URL=${API_BASE_URL:-http://localhost:8000}
     volumes:
       - npm-cache:/root/.npm
     restart: unless-stopped

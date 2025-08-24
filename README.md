@@ -307,6 +307,29 @@ task migrate:downgrade # 1つ前にダウングレード
 
 問題が解決しない場合は、環境情報と共に GitHub でイシューを作成してください。
 
+## 🔗 API統合基盤
+
+このテンプレートには、フロントエンドとバックエンドを効率的に統合するための共通基盤が含まれています。
+
+### 主な機能
+
+- **統一された状態管理**: Jotai Atomsファクトリー
+- **型安全なServer Actions**: @praha/byethrow Result型
+- **共通エラーハンドリング**: 一貫したエラー処理
+- **再利用可能なパターン**: 新機能の迅速な実装
+
+### 使用方法
+
+詳細な使用方法については、[API統合基盤 使用ガイド](./frontend/API_INTEGRATION_GUIDE.md)を参照してください。
+
+### Health機能（実装例）
+
+API統合基盤を使用した実装例として、Health機能が含まれています：
+
+- **CSR版**: `/health` - Client-Side Rendering
+- **SSR版**: `/serverHealth` - Server-Side Rendering  
+- **API**: `/api/health` - Route Handler
+
 ## 🌟 主な機能
 
 ### フロントエンド

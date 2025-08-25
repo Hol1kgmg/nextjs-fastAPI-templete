@@ -63,7 +63,6 @@ dev = [
     "ruff>=0.12.4",
     "mypy>=1.17.0", 
     "pytest>=8.4.1",
-    "pytest-asyncio>=1.1.0",
+    "pytest-asyncio>=0.21.0",
     "httpx>=0.28.1",
-    "pytest-postgresql>=5.0.0",
 ]

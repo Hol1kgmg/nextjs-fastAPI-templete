@@ -1,15 +1,37 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="NextJS FastAPI Template API", version="1.0.0")
+from src.api.examples.routes import router as examples_router
 
+# APIルート
+from src.api.health.routes import router as health_router
+
+# 設定とミドルウェア
+from src.core.config import settings
+from src.core.logging import setup_logging
+from src.core.middleware import ErrorHandlerMiddleware, LoggingMiddleware
+
+# ログ設定初期化
+setup_logging()
+
+app = FastAPI(
+    title=settings.app_name, version=settings.app_version, debug=settings.debug
+)
+
+# ミドルウェア設定
+app.add_middleware(ErrorHandlerMiddleware)
+app.add_middleware(LoggingMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=settings.cors_origins,
+    allow_credentials=settings.cors_allow_credentials,
+    allow_methods=settings.cors_allow_methods,
+    allow_headers=settings.cors_allow_headers,
 )
+
+# APIルート登録
+app.include_router(health_router)
+app.include_router(examples_router)
 
 
 @app.get("/")

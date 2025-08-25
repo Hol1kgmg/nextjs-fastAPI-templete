@@ -50,6 +50,11 @@ warn_unused_ignores = true
 warn_no_return = true
 warn_unreachable = true
 explicit_package_bases = true
+exclude = [
+    "tests/",
+    ".venv/",
+    ".mypy_cache/",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

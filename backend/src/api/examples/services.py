@@ -69,6 +69,43 @@ class ExampleService:
         )
 
     @staticmethod
+    async def list_examples_optimized(
+        db: AsyncSession,
+        page: int = 1,
+        per_page: int = 10,
+        search: str | None = None,
+    ) -> ExampleListResponse:
+        """最適化されたExampleリスト取得"""
+        # ベースクエリ
+        stmt = select(Example)
+
+        # 検索条件（インデックスを活用）
+        if search:
+            stmt = stmt.where(Example.name.ilike(f"%{search}%"))
+
+        # 効率的な総件数取得（サブクエリを使用）
+        count_stmt = select(func.count(Example.id)).select_from(stmt.subquery())
+        total_result = await db.execute(count_stmt)
+        total = total_result.scalar() or 0
+
+        # ページネーション（LIMIT/OFFSETの最適化）
+        offset = (page - 1) * per_page
+        stmt = (
+            stmt.offset(offset).limit(per_page).order_by(Example.id.desc())
+        )  # idでソート（インデックス活用）
+
+        result = await db.execute(stmt)
+        examples = result.scalars().all()
+
+        # レスポンス作成
+        items = [ExampleResponse.model_validate(example) for example in examples]
+        pages = (total + per_page - 1) // per_page
+
+        return ExampleListResponse(
+            items=items, total=total, page=page, per_page=per_page, pages=pages
+        )
+
+    @staticmethod
     async def update_example(
         db: AsyncSession, example_id: int, example: ExampleUpdate
     ) -> ExampleResponse:

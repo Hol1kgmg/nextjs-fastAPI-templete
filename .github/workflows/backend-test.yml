@@ -1,0 +1,62 @@
+name: Backend Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths: [ 'backend/**' ]
+  pull_request:
+    branches: [ main, develop ]
+    paths: [ 'backend/**' ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: test_mydb
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+      with:
+        version: "latest"
+    
+    - name: Set up Python
+      run: uv python install 3.11
+    
+    - name: Install dependencies
+      working-directory: ./backend
+      run: |
+        uv sync --group dev
+    
+    - name: Run linting
+      working-directory: ./backend
+      run: |
+        uv run ruff check .
+        uv run ruff format --check .
+    
+    - name: Run type checking
+      working-directory: ./backend
+      run: |
+        uv run mypy .
+    
+    - name: Run tests
+      working-directory: ./backend
+      env:
+        TEST_DATABASE_URL: postgresql+asyncpg://user:root@localhost:5432/test_mydb
+      run: |
+        uv run pytest tests/ -v --tb=short

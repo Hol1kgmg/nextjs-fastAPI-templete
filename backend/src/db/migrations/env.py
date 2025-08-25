@@ -9,7 +9,7 @@ from sqlalchemy import engine_from_config, pool
 from src.db.database import Base
 
 # すべてのモデルをインポートしてAlembicが認識できるようにする
-from src.db.models.sample import SampleTable  # noqa: F401
+from src.db.models.example import Example  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

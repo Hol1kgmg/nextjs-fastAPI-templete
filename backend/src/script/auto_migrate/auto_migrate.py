@@ -407,6 +407,18 @@ class MigrationAnalyzer:
         if not changes:
             return "Update schema"
 
+        # テーブル作成があるかチェック（優先的にメッセージを生成）
+        table_creations = [c for c in changes if c.change_type == "create_table"]
+        if table_creations:
+            table_names = {c.table_name for c in changes}
+            if len(table_creations) == 1 and len(table_names) == 1:
+                # 単一テーブル作成 + 同テーブルへの付随操作
+                table_name = table_creations[0].table_name
+                return f"Create {table_name} table"
+            elif len(table_creations) > 1:
+                # 複数テーブル作成
+                return f"Create {len(table_creations)} tables"
+
         messages = [self._generate_single_change_message(change) for change in changes]
         return self._format_messages(messages)
 
@@ -442,6 +454,19 @@ class MigrationAnalyzer:
         """変更リストからファイル名を生成（Decision Tree based）"""
         if not changes:
             return "update_schema"
+
+        # テーブル作成があるかチェック（優先的に処理）
+        table_creations = [c for c in changes if c.change_type == "create_table"]
+        if table_creations:
+            # テーブル作成がある場合は、それを主要な変更として扱う
+            table_names = {c.table_name for c in changes}
+            if len(table_creations) == 1 and len(table_names) == 1:
+                # 単一テーブル作成 + 同テーブルへの付随操作
+                table_name = table_creations[0].table_name
+                return f"create_{table_name}_table"
+            elif len(table_creations) > 1:
+                # 複数テーブル作成
+                return f"create_{len(table_creations)}tables"
 
         # テーブル別グループ化
         by_table: TableChangesDict = {}

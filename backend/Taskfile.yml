@@ -56,6 +56,21 @@ tasks:
       - task typecheck
       - echo "✅ すべてのコード品質チェックが完了しました"
 
+  check:all:exclude:
+    desc: "Run all code quality checks excluding specified directories"
+    summary: "Usage: task check:all:exclude -- dir1 dir2 dir3"
+    cmds:
+      - |
+        EXCLUDES=""
+        for dir in {{.CLI_ARGS}}; do
+          EXCLUDES="$EXCLUDES --exclude $dir"
+        done
+        echo "🔍 コード品質チェック開始（除外: {{.CLI_ARGS}}）"
+        uv run ruff check . $EXCLUDES
+        uv run ruff format . --check $EXCLUDES
+        uv run mypy src
+        echo "✅ すべてのコード品質チェックが完了しました（除外: {{.CLI_ARGS}}）"
+
   fix:all:
     desc: "Auto-fix all possible issues (lint + format)"
     cmds:
@@ -63,6 +78,20 @@ tasks:
       - task lint:fix
       - task format
       - echo "✅ 自動修正が完了しました。型チェックを実行してください - task typecheck"
+
+  fix:all:exclude:
+    desc: "Auto-fix all possible issues excluding specified directories"
+    summary: "Usage: task fix:all:exclude -- dir1 dir2 dir3"
+    cmds:
+      - |
+        EXCLUDES=""
+        for dir in {{.CLI_ARGS}}; do
+          EXCLUDES="$EXCLUDES --exclude $dir"
+        done
+        echo "🔧 自動修正開始（除外: {{.CLI_ARGS}}）"
+        uv run ruff check . --fix $EXCLUDES
+        uv run ruff format . $EXCLUDES
+        echo "✅ 自動修正完了。型チェックを実行してください - task typecheck"
 
   # マイグレーション関連
   migrate:

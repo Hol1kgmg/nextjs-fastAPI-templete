@@ -14,11 +14,12 @@ pre-commit:
     backend-fix-and-check:
       root: "backend/"
       glob: "*.py"
+      exclude: "backend/src/db/migrations/**"
       run: |
         echo "🔧 Backend: Auto-fix and quality check..."
-        task fix:all
+        task fix:all:exclude -- src/db/migrations
         git add {staged_files}
-        task check:all
+        task check:all:exclude -- src/db/migrations
       stage_fixed: true
 
     config-files-check:
@@ -32,7 +33,7 @@ pre-commit:
         fi
         if echo "{staged_files}" | grep -E "(pyproject\.toml|uv\.lock|\.env|alembic\.ini)" >/dev/null; then
           echo "🎯 Backend config detected"
-          cd backend && task check:all
+          cd backend && task check:all:exclude -- src/db/migrations
         fi
         if echo "{staged_files}" | grep -E "(Taskfile\.yml|\.mise\.toml|lefthook\.yml)" >/dev/null; then
           echo "🎯 Project-wide config detected"

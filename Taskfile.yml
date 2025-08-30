@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 # === 共通操作（フルスタック統合タスク） ===
 tasks:
@@ -112,9 +112,8 @@ tasks:
   # === Frontend専用操作 ===
   install:frontend:
     desc: "[Frontend] Install dependencies using Bun"
-    dir: frontend
     cmds:
-      - bun install
+      - task -d frontend install
 
   dev:frontend:
     desc: "[Frontend] Start development server"
@@ -124,59 +123,48 @@ tasks:
 
   build:frontend:
     desc: "[Frontend] Build production application"
-    dir: frontend
     cmds:
-      - bun run build
+      - task -d frontend build
 
   test:frontend:
-    desc: "[Frontend] Run tests"
-    dir: frontend
+    desc: "[Frontend] Run all tests, or specific test with -- path/to/test.ts"
     cmds:
-      - bun run test
+      - task -d frontend test {{.CLI_ARGS}}
 
   check:frontend:
     desc: "[Frontend] Run all quality checks"
-    dir: frontend
     cmds:
-      - bun run check
-      - bun run format
-      - bun run typecheck
+      - task -d frontend check:all
 
   fix:frontend:
     desc: "[Frontend] Run integrated auto-fix (check:fix + format:fix)"
-    dir: frontend
     cmds:
-      - task fix:all
+      - task -d frontend fix:all
 
   check:fix:frontend:
     desc: "[Frontend] Run Biome auto-fix (including unsafe fixes)"
-    dir: frontend
     cmds:
-      - task check:fix
+      - task -d frontend check:fix
 
   format:fix:frontend:
     desc: "[Frontend] Auto-format code with Biome"
-    dir: frontend
     cmds:
-      - task format:fix
+      - task -d frontend format:fix
 
   rebuild:frontend:
     desc: "[Frontend] Clean .next cache and rebuild Next.js application"
-    dir: frontend
     cmds:
-      - task rebuild
+      - task -d frontend rebuild
 
   clean:frontend:
     desc: "[Frontend] Clean generated files"
-    dir: frontend
     cmds:
-      - rm -rf .next node_modules/.cache dist storybook-static
+      - task -d frontend clean
 
   ui:add:
     desc: "[Frontend] Add shadcn/ui component"
-    dir: frontend
     cmds:
-      - task ui:add {{.CLI_ARGS}}
+      - task -d frontend ui:add {{.CLI_ARGS}}
 
   docker:build:frontend:
     desc: "[Frontend] Build Docker image"
@@ -199,9 +187,8 @@ tasks:
   # === Backend専用操作 ===
   install:backend:
     desc: "[Backend] Install dependencies using uv"
-    dir: backend
     cmds:
-      - uv sync --group dev
+      - task -d backend install
 
   dev:backend:
     desc: "[Backend] Start development server"
@@ -211,48 +198,38 @@ tasks:
 
   build:backend:
     desc: "[Backend] Build backend (placeholder)"
-    dir: backend
     cmds:
-      - echo "Backend build completed"
+      - task -d backend build
 
   test:backend:
-    desc: "[Backend] Run tests with pytest"
-    dir: backend
+    desc: "[Backend] Run all tests, or specific test with -- path/to/test.py"
     cmds:
-      - uv run pytest
+      - task -d backend test {{.CLI_ARGS}}
 
   check:backend:
     desc: "[Backend] Run all code quality checks"
-    dir: backend
     cmds:
-      - uv run ruff check .
-      - uv run ruff format . --check
-      - uv run mypy src
+      - task -d backend check:all
 
   fix:backend:
     desc: "[Backend] Auto-fix all possible issues (lint + format)"
-    dir: backend
     cmds:
-      - task fix:all
+      - task -d backend fix:all
 
   check:fix:backend:
     desc: "[Backend] Run linting with ruff and auto-fix issues"
-    dir: backend
     cmds:
-      - task lint:fix
+      - task -d backend lint:fix
 
   format:fix:backend:
     desc: "[Backend] Format code with ruff"
-    dir: backend
     cmds:
-      - task format
+      - task -d backend format
 
   clean:backend:
     desc: "[Backend] Clean generated files"
-    dir: backend
     cmds:
-      - rm -rf .pytest_cache .mypy_cache .ruff_cache __pycache__
-      - find . -name "*.pyc" -delete
+      - task -d backend clean
 
   docker:build:backend:
     desc: "[Backend] Build Docker image"
@@ -272,50 +249,42 @@ tasks:
   # マイグレーション関連
   migrate:
     desc: "[Backend] Run auto migration (generate + upgrade)"
-    dir: backend
     cmds:
-      - uv run python -m src.script.auto_migrate
+      - task -d backend migrate
 
   migrate:generate:
     desc: "[Backend] Generate migration only (no upgrade)"
-    dir: backend
     cmds:
-      - uv run python -m src.script.auto_migrate --no-upgrade
+      - task -d backend migrate:generate
 
   migrate:status:
     desc: "[Backend] Show migration status"
-    dir: backend
     cmds:
-      - uv run python -m src.script.auto_migrate --status
+      - task -d backend migrate:status
 
   migrate:upgrade:
     desc: "[Backend] Upgrade database to latest migration"
-    dir: backend
     cmds:
-      - uv run alembic upgrade head
+      - task -d backend migrate:upgrade
 
   migrate:downgrade:
     desc: "[Backend] Safely rollback database by one migration"
-    dir: backend
     cmds:
-      - uv run python -m src.script.migration_safety --downgrade
+      - task -d backend migrate:downgrade
 
   migrate:check:
     desc: "[Backend] Check migration files integrity"
-    dir: backend
     cmds:
-      - uv run python -m src.script.migration_safety --check-only
+      - task -d backend migrate:check
 
   migrate:reset:
     desc: "[Backend] Reset database to base (remove all migrations)"
-    dir: backend
     cmds:
       - echo "⚠️  データベースを初期状態にリセットします"
-      - uv run alembic downgrade base
+      - task -d backend migrate:reset
       - echo "✅ データベースリセット完了"
 
   migrate:history:
     desc: "[Backend] Show migration history"
-    dir: backend
     cmds:
-      - uv run alembic history
+      - task -d backend migrate:history

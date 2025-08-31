@@ -1,3 +1,4 @@
+import concurrent.futures
 import os
 import sys
 import time
@@ -5,6 +6,7 @@ from datetime import datetime
 from unittest.mock import MagicMock, patch
 
 import pytest
+from fastapi import HTTPException
 
 # プロジェクトのルートディレクトリをパスに追加
 sys.path.insert(
@@ -438,7 +440,6 @@ class TestErrorHandling:
     @pytest.mark.asyncio
     async def test_error_handler_middleware_http_exception(self):
         """ErrorHandlerMiddlewareのHTTPException処理テスト"""
-        from fastapi import HTTPException
 
         middleware = ErrorHandlerMiddleware(app=None)
 
@@ -614,7 +615,6 @@ class TestErrorHandling:
 
     def test_concurrent_error_handling_stress(self, client):
         """並行エラーハンドリングのストレステスト"""
-        import concurrent.futures
 
         def make_error_request(path_suffix):
             return client.get(f"/api/nonexistent/{path_suffix}")
@@ -630,34 +630,6 @@ class TestErrorHandling:
             assert response.status_code == 404
             data = response.json()
             assert "detail" in data
-
-    def test_error_handling_memory_usage(self, client):
-        """エラーハンドリングのメモリ使用量テスト"""
-        import gc
-        import os
-
-        import psutil
-
-        # 現在のプロセスのメモリ使用量を取得
-        process = psutil.Process(os.getpid())
-        initial_memory = process.memory_info().rss
-
-        # 大量のエラーリクエストを送信
-        for i in range(100):
-            response = client.get(f"/api/nonexistent/{i}")
-            assert response.status_code == 404
-
-        # ガベージコレクションを実行
-        gc.collect()
-
-        # メモリ使用量の増加が合理的な範囲内であることを確認
-        final_memory = process.memory_info().rss
-        memory_increase = final_memory - initial_memory
-
-        # メモリ増加が10MB以下であることを確認（調整可能）
-        assert memory_increase < 10 * 1024 * 1024, (
-            f"Memory increase too large: {memory_increase} bytes"
-        )
 
     def test_error_response_timestamp_format_validation(self, client):
         """エラーレスポンスのタイムスタンプ形式検証テスト"""

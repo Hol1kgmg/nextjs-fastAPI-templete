@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 # プロジェクトのルートディレクトリをパスに追加
 sys.path.insert(
@@ -77,7 +78,6 @@ class TestHealthAPI:
 
     def test_health_endpoint_performance(self, client):
         """Health API パフォーマンステスト"""
-        import time
 
         start_time = time.time()
         response = client.get("/api/health/")

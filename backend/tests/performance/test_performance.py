@@ -14,6 +14,7 @@ sys.path.insert(
 from src.api.examples.schemas import ExampleCreate
 from src.api.examples.services import ExampleService
 from src.db.models.example import Example
+from tests.conftest import TestingSessionLocal
 
 
 @pytest.mark.asyncio
@@ -25,8 +26,6 @@ class TestPerformance:
         """パフォーマンステスト用のデータセットアップ"""
 
         async def create_test_data():
-            from tests.conftest import TestingSessionLocal
-
             async with TestingSessionLocal() as session:
                 try:
                     # 既存データをクリア
@@ -58,7 +57,6 @@ class TestPerformance:
 
     async def test_database_query_performance(self):
         """データベースクエリのパフォーマンステスト"""
-        from tests.conftest import TestingSessionLocal
 
         async with TestingSessionLocal() as session:
             # 単純なSELECTクエリの性能測定
@@ -76,7 +74,6 @@ class TestPerformance:
 
     async def test_pagination_query_performance(self):
         """ページネーションクエリのパフォーマンステスト"""
-        from tests.conftest import TestingSessionLocal
 
         page_sizes = [10, 50, 100]
         performance_results = {}
@@ -106,7 +103,6 @@ class TestPerformance:
 
     async def test_search_query_performance(self):
         """検索クエリのパフォーマンステスト"""
-        from tests.conftest import TestingSessionLocal
 
         search_terms = ["Test", "0001", "Performance", "999"]
 
@@ -128,7 +124,6 @@ class TestPerformance:
 
     async def test_index_effectiveness(self):
         """インデックス効果の確認テスト"""
-        from tests.conftest import TestingSessionLocal
 
         async with TestingSessionLocal() as session:
             # nameカラムでの検索（インデックスあり）
@@ -164,7 +159,6 @@ class TestPerformance:
 
     async def test_concurrent_query_performance(self):
         """並行クエリのパフォーマンステスト"""
-        from tests.conftest import TestingSessionLocal
 
         async def single_query():
             async with TestingSessionLocal() as session:
@@ -192,7 +186,6 @@ class TestPerformance:
 
     async def test_crud_operation_performance(self):
         """CRUD操作のパフォーマンステスト"""
-        from tests.conftest import TestingSessionLocal
 
         # Create操作の性能測定
         create_times = []
@@ -260,14 +253,10 @@ class TestPerformance:
     def test_api_response_time_measurement(self):
         """API応答時間の測定テスト"""
         # APIクライアントテストはclientフィクスチャが必要なためスキップ
-        import pytest
-
         pytest.skip("API client not available in current test environment")
 
     @pytest.mark.skip(reason="API client not available in current test environment")
     def test_api_throughput_measurement(self):
         """API スループットの測定テスト"""
         # APIクライアントテストはclientフィクスチャが必要なためスキップ
-        import pytest
-
         pytest.skip("API client not available in current test environment")

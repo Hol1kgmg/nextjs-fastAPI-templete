@@ -1,11 +1,14 @@
+import datetime
 import os
 import sys
+import time
 
 # プロジェクトのルートディレクトリをパスに追加
 sys.path.insert(
     0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
 
+from datetime import datetime as dt
 
 import pytest
 
@@ -338,7 +341,6 @@ class TestExampleCRUDAPI:
 
     def test_examples_api_performance(self, client):
         """Examples API パフォーマンステスト"""
-        import time
 
         # 作成パフォーマンス
         start_time = time.time()
@@ -513,15 +515,11 @@ class TestExampleCRUDAPI:
         assert isinstance(updated_at, str)
 
         # ISO形式の日時文字列であることを確認
-        import datetime
-
         datetime.datetime.fromisoformat(created_at.replace("Z", "+00:00"))
         datetime.datetime.fromisoformat(updated_at.replace("Z", "+00:00"))
 
         # 作成時は created_at と updated_at がほぼ同じ（1秒以内の差を許容）
-        from datetime import datetime
-
-        created_dt = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
-        updated_dt = datetime.fromisoformat(updated_at.replace("Z", "+00:00"))
+        created_dt = dt.fromisoformat(created_at.replace("Z", "+00:00"))
+        updated_dt = dt.fromisoformat(updated_at.replace("Z", "+00:00"))
         time_diff = abs((created_dt - updated_dt).total_seconds())
         assert time_diff < 1.0, f"時刻差が1秒を超えています: {time_diff}秒"

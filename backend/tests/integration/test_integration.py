@@ -1,3 +1,4 @@
+import concurrent.futures
 import os
 import sys
 import time
@@ -316,7 +317,6 @@ class TestIntegration:
 
     def test_concurrent_requests_integration(self, client: TestClient):
         """並行リクエスト統合テスト"""
-        import concurrent.futures
 
         def make_request():
             response = client.get("/api/health/")

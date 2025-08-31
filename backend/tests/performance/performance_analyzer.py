@@ -4,6 +4,8 @@ import time
 from collections.abc import Callable
 from typing import Any
 
+from sqlalchemy import text
+
 
 class PerformanceAnalyzer:
     """パフォーマンス分析ツール"""
@@ -179,7 +181,6 @@ class DatabasePerformanceAnalyzer:
         self, query: str, params: dict = None
     ) -> dict[str, Any]:
         """クエリのパフォーマンス分析"""
-        from sqlalchemy import text
 
         # EXPLAIN ANALYZE実行（PostgreSQLの場合）
         explain_query = f"EXPLAIN ANALYZE {query}"

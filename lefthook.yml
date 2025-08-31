@@ -52,27 +52,28 @@ pre-commit:
           echo "ℹ️ Similarity tool not found. Install with: task install:similarity"
         fi
 
-pre-push:
-  parallel: true
-  commands:
-    build-test:
-      run: |
-        echo "🏗️ Build test (quality checks completed in pre-commit)..."
-        if git diff --name-only HEAD~1 | grep -E "frontend/.*\.(ts|tsx|js|jsx)" >/dev/null; then
-          echo "📦 Frontend build test..."
-          task build:frontend --dry-run 2>/dev/null || task build:frontend
-        fi
-        if git diff --name-only HEAD~1 | grep -E "backend/.*\.py" >/dev/null; then
-          echo "📦 Backend build test..."
-          task build:backend
-        fi
-
-    ci-alignment-check:
-      run: |
-        echo "🔍 CI/CD alignment check..."
-        if command -v mise >/dev/null 2>&1; then
-          mise list | grep -E "(python|node|bun)" || echo "⚠️ Tool versions may differ from CI/CD"
-        fi
+# pushのレスポンスが遅くなるのでコメントアウト
+# pre-push:
+#   parallel: true
+#   commands:
+#     build-test:
+#       run: |
+#         echo "🏗️ Build test (quality checks completed in pre-commit)..."
+#         if git diff --name-only HEAD~1 | grep -E "frontend/.*\.(ts|tsx|js|jsx)" >/dev/null; then
+#           echo "📦 Frontend build test..."
+#           cd frontend && task build
+#         fi
+#         if git diff --name-only HEAD~1 | grep -E "backend/.*\.py" >/dev/null; then
+#           echo "📦 Backend build test..."
+#           cd backend && task build
+#         fi
+# 
+#     ci-alignment-check:
+#       run: |
+#         echo "🔍 CI/CD alignment check..."
+#         if command -v mise >/dev/null 2>&1; then
+#           mise list | grep -E "(python|node|bun)" || echo "⚠️ Tool versions may differ from CI/CD"
+#         fi
 
 # EXAMPLE USAGE (commented out):
 #

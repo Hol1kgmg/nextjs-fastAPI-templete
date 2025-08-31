@@ -14,7 +14,6 @@ pre-commit:
     backend-fix-and-check:
       root: "backend/"
       glob: "*.py"
-      exclude: "backend/src/db/migrations/**"
       run: |
         echo "🔧 Backend: Auto-fix and quality check..."
         task fix:all:exclude -- src/db/migrations

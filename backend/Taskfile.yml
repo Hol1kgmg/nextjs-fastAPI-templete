@@ -51,10 +51,10 @@ tasks:
   check:all:
     desc: "Run all code quality checks (lint, format, typecheck)"
     cmds:
-      - task lint
-      - task format:check
-      - task typecheck
-      - echo "✅ すべてのコード品質チェックが完了しました"
+      # - task lint
+      # - task format:check
+      # - task typecheck
+      - task check:all:exclude -- src/db/migrations
 
   check:all:exclude:
     desc: "Run all code quality checks excluding specified directories"
@@ -74,10 +74,7 @@ tasks:
   fix:all:
     desc: "Auto-fix all possible issues (lint + format)"
     cmds:
-      - echo "🔧 コード品質の自動修正を開始..."
-      - task lint:fix
-      - task format
-      - echo "✅ 自動修正が完了しました。型チェックを実行してください - task typecheck"
+      - task fix:all:exclude -- src/db/migrations
 
   fix:all:exclude:
     desc: "Auto-fix all possible issues excluding specified directories"

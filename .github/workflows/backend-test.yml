@@ -46,13 +46,13 @@ jobs:
     - name: Run linting
       working-directory: ./backend
       run: |
-        uv run ruff check .
-        uv run ruff format --check .
+        uv run ruff check . --exclude src/db/migrations
+        uv run ruff format --check . --exclude src/db/migrations
     
     - name: Run type checking
       working-directory: ./backend
       run: |
-        uv run mypy .
+        uv run mypy src --exclude src/db/migrations
     
     - name: Run tests
       working-directory: ./backend

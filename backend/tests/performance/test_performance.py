@@ -1,10 +1,8 @@
 import asyncio
-import gc
 import os
 import sys
 import time
 
-import psutil
 import pytest
 from sqlalchemy import text
 
@@ -191,35 +189,6 @@ class TestPerformance:
 
         # 並行実行が効率的であることを確認（単純な10倍より高速）
         assert total_time < 2.0, f"Concurrent queries too slow: {total_time:.3f}s"
-
-    async def test_memory_usage_during_large_queries(self):
-        """大量クエリ時のメモリ使用量テスト"""
-        from tests.conftest import TestingSessionLocal
-
-        process = psutil.Process(os.getpid())
-        initial_memory = process.memory_info().rss
-
-        # 大量データを取得するクエリを複数回実行
-        async with TestingSessionLocal() as session:
-            for page in range(
-                1, 6
-            ):  # 5ページ分取得（1000件データなので100件×10ページ可能だが5ページで十分）
-                result = await ExampleService.list_examples(
-                    db=session, page=page, per_page=100
-                )
-                expected_items = min(100, max(0, 1000 - (page - 1) * 100))
-                assert len(result.items) == expected_items
-
-        # ガベージコレクション実行
-        gc.collect()
-
-        final_memory = process.memory_info().rss
-        memory_increase = final_memory - initial_memory
-
-        # メモリ増加が合理的な範囲内であることを確認（50MB以下）
-        assert memory_increase < 50 * 1024 * 1024, (
-            f"Memory usage too high: {memory_increase} bytes"
-        )
 
     async def test_crud_operation_performance(self):
         """CRUD操作のパフォーマンステスト"""

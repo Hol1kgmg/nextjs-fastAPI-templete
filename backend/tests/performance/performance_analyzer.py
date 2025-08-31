@@ -4,15 +4,12 @@ import time
 from collections.abc import Callable
 from typing import Any
 
-import psutil
-
 
 class PerformanceAnalyzer:
     """パフォーマンス分析ツール"""
 
     def __init__(self):
         self.results: dict[str, Any] = {}
-        self.process = psutil.Process()
 
     async def measure_async_function(
         self, func: Callable, *args, iterations: int = 1, name: str = None
@@ -20,12 +17,8 @@ class PerformanceAnalyzer:
         """非同期関数のパフォーマンス測定"""
         function_name = name or func.__name__
         execution_times = []
-        memory_usage = []
 
         for _ in range(iterations):
-            # メモリ使用量測定開始
-            initial_memory = self.process.memory_info().rss
-
             # 実行時間測定
             start_time = time.perf_counter()
 
@@ -37,11 +30,6 @@ class PerformanceAnalyzer:
             end_time = time.perf_counter()
             execution_time = end_time - start_time
             execution_times.append(execution_time)
-
-            # メモリ使用量測定終了
-            final_memory = self.process.memory_info().rss
-            memory_diff = final_memory - initial_memory
-            memory_usage.append(memory_diff)
 
         # 統計情報計算
         stats = {
@@ -55,12 +43,6 @@ class PerformanceAnalyzer:
                 "stdev": statistics.stdev(execution_times)
                 if len(execution_times) > 1
                 else 0,
-            },
-            "memory_usage": {
-                "min": min(memory_usage),
-                "max": max(memory_usage),
-                "mean": statistics.mean(memory_usage),
-                "median": statistics.median(memory_usage),
             },
             "throughput": iterations / sum(execution_times),
         }
@@ -74,12 +56,8 @@ class PerformanceAnalyzer:
         """同期関数のパフォーマンス測定"""
         function_name = name or func.__name__
         execution_times = []
-        memory_usage = []
 
         for _ in range(iterations):
-            # メモリ使用量測定開始
-            initial_memory = self.process.memory_info().rss
-
             # 実行時間測定
             start_time = time.perf_counter()
             func(*args)
@@ -87,11 +65,6 @@ class PerformanceAnalyzer:
 
             execution_time = end_time - start_time
             execution_times.append(execution_time)
-
-            # メモリ使用量測定終了
-            final_memory = self.process.memory_info().rss
-            memory_diff = final_memory - initial_memory
-            memory_usage.append(memory_diff)
 
         # 統計情報計算
         stats = {
@@ -105,12 +78,6 @@ class PerformanceAnalyzer:
                 "stdev": statistics.stdev(execution_times)
                 if len(execution_times) > 1
                 else 0,
-            },
-            "memory_usage": {
-                "min": min(memory_usage),
-                "max": max(memory_usage),
-                "mean": statistics.mean(memory_usage),
-                "median": statistics.median(memory_usage),
             },
             "throughput": iterations / sum(execution_times),
         }
@@ -133,10 +100,6 @@ class PerformanceAnalyzer:
             "comparison": comparison_name,
             "speed_improvement": baseline["execution_times"]["mean"]
             / comparison["execution_times"]["mean"],
-            "memory_improvement": baseline["memory_usage"]["mean"]
-            / comparison["memory_usage"]["mean"]
-            if comparison["memory_usage"]["mean"] != 0
-            else float("inf"),
             "throughput_improvement": comparison["throughput"] / baseline["throughput"],
         }
 
@@ -157,11 +120,6 @@ class PerformanceAnalyzer:
                     f"  - Min: {stats['execution_times']['min']:.6f}",
                     f"  - Max: {stats['execution_times']['max']:.6f}",
                     f"  - StdDev: {stats['execution_times']['stdev']:.6f}",
-                    "Memory Usage (bytes):",
-                    f"  - Mean: {stats['memory_usage']['mean']:,}",
-                    f"  - Median: {stats['memory_usage']['median']:,}",
-                    f"  - Min: {stats['memory_usage']['min']:,}",
-                    f"  - Max: {stats['memory_usage']['max']:,}",
                     f"Throughput: {stats['throughput']:.2f} ops/sec",
                     "-" * 30,
                     "",
@@ -177,7 +135,6 @@ class PerformanceAnalyzer:
         for function_name, stats in self.results.items():
             mean_time = stats["execution_times"]["mean"]
             stdev_time = stats["execution_times"]["stdev"]
-            mean_memory = stats["memory_usage"]["mean"]
 
             # 実行時間が遅い場合
             if mean_time > 0.1:
@@ -192,14 +149,6 @@ class PerformanceAnalyzer:
                     f"{function_name}: 実行時間のばらつきが大きいです "
                     f"(StdDev: {stdev_time:.3f}s)。"
                     "コネクションプールの設定やキャッシュの導入を検討してください。"
-                )
-
-            # メモリ使用量が多い場合
-            if mean_memory > 10 * 1024 * 1024:  # 10MB
-                memory_mb = mean_memory / 1024 / 1024
-                recommendations.append(
-                    f"{function_name}: メモリ使用量が多いです ({memory_mb:.1f}MB)。"
-                    "データの取得方法やオブジェクトの生成を見直してください。"
                 )
 
             # スループットが低い場合

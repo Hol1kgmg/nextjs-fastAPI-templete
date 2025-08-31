@@ -27,7 +27,7 @@ import type { ApiError, ApiState } from "@/types";
  * } = createApiStateAtoms<HealthResponse, HealthApiError>();
  * ```
  */
-export function createApiStateAtoms<TData, TError = ApiError>() {
+export const createApiStateAtoms = <TData, TError = ApiError>() => {
 	// データAtom（リセット可能）
 	const dataAtom = atomWithReset<TData | null>(null);
 
@@ -50,7 +50,7 @@ export function createApiStateAtoms<TData, TError = ApiError>() {
 		errorAtom,
 		stateAtom,
 	};
-}
+};
 
 /**
  * API状態をリセットするヘルパー関数を生成
@@ -58,9 +58,9 @@ export function createApiStateAtoms<TData, TError = ApiError>() {
  * @param atoms - createApiStateAtomsで生成されたAtomセット
  * @returns リセット関数
  */
-export function createApiStateReset<TData, TError = ApiError>(
+export const createApiStateReset = <TData, TError = ApiError>(
 	atoms: ReturnType<typeof createApiStateAtoms<TData, TError>>,
-) {
+) => {
 	return () => {
 		// リセット可能なAtomsをリセット
 		atoms.dataAtom.init;
@@ -68,4 +68,4 @@ export function createApiStateReset<TData, TError = ApiError>(
 		// loadingAtomは通常の値なのでfalseに設定
 		atoms.loadingAtom.init = false;
 	};
-}
+};

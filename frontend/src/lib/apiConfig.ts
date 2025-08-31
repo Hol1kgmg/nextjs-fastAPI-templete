@@ -32,10 +32,10 @@ export const clientApiConfig = {
  * const response = await clientApiCall<HealthResponse>('/health');
  * ```
  */
-export async function clientApiCall<TResponse>(
+export const clientApiCall = async <TResponse>(
 	endpoint: string,
 	options?: RequestInit,
-): Promise<TResponse> {
+): Promise<TResponse> => {
 	const url = `/api${endpoint}`;
 
 	const response = await fetch(url, {
@@ -51,7 +51,7 @@ export async function clientApiCall<TResponse>(
 	}
 
 	return response.json();
-}
+};
 
 /**
  * クライアントサイドAPIエラーを標準化する関数
@@ -59,7 +59,7 @@ export async function clientApiCall<TResponse>(
  * @param error - キャッチされたエラー
  * @returns 標準化されたApiError
  */
-export function normalizeClientApiError(error: unknown): ApiError {
+export const normalizeClientApiError = (error: unknown): ApiError => {
 	if (error instanceof Error) {
 		return {
 			message: error.message,
@@ -73,4 +73,4 @@ export function normalizeClientApiError(error: unknown): ApiError {
 		code: "UNKNOWN_CLIENT_ERROR",
 		details: error,
 	};
-}
+};

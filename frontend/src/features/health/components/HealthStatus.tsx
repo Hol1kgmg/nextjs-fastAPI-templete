@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useHealthHook } from "@/features/health/hooks/useHealthHook";
 
-export function HealthStatus() {
+export const HealthStatus = () => {
 	const { data, loading, error, fetchHealth, retry } = useHealthHook();
 
 	useEffect(() => {
@@ -71,4 +71,4 @@ export function HealthStatus() {
 			</Button>
 		</div>
 	);
-}
+};

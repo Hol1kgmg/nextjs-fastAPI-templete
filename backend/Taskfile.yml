@@ -14,7 +14,7 @@ tasks:
   dev:
     desc: "Start development server"
     cmds:
-      - uv run uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+      - uv run uvicorn src.main:app --host "::" --port 8000 --reload
 
   build:
     desc: "Build backend (placeholder)"

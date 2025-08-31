@@ -18,10 +18,10 @@ import type {
  *
  * @returns Result型でラップされたHealthResponse
  */
-export async function getHealthAction(): Result.ResultAsync<
+export const getHealthAction = async (): Result.ResultAsync<
 	HealthResponse,
 	HealthApiError
-> {
+> => {
 	// 共通基盤のcreateApiActionを使用
 	const result = await createApiAction<HealthResponse>("/health");
 
@@ -36,4 +36,4 @@ export async function getHealthAction(): Result.ResultAsync<
 	}
 
 	return result;
-}
+};

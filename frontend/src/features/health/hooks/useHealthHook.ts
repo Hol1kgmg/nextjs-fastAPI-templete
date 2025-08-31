@@ -9,7 +9,7 @@ import {
 	healthStateAtom,
 } from "@/features/health/atoms/healthAtoms";
 
-export function useHealthHook() {
+export const useHealthHook = () => {
 	const [state] = useAtom(healthStateAtom);
 	const setData = useSetAtom(healthDataAtom);
 	const setLoading = useSetAtom(healthLoadingAtom);
@@ -35,4 +35,4 @@ export function useHealthHook() {
 	}, [fetchHealth]);
 
 	return { ...state, fetchHealth, retry };
-}
+};

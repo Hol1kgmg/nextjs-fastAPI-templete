@@ -8,7 +8,9 @@ type ServerHealthStatusProps = {
 	healthResult: Result.Result<HealthResponse, HealthApiError>;
 };
 
-export function ServerHealthStatus({ healthResult }: ServerHealthStatusProps) {
+export const ServerHealthStatus = ({
+	healthResult,
+}: ServerHealthStatusProps) => {
 	if (Result.isSuccess(healthResult)) {
 		const data = healthResult.value;
 		return (
@@ -37,4 +39,4 @@ export function ServerHealthStatus({ healthResult }: ServerHealthStatusProps) {
 			</div>
 		</div>
 	);
-}
+};

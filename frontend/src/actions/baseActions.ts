@@ -21,15 +21,15 @@ import type { ApiError } from "@/types";
  * @example
  * ```typescript
  * // Health機能での使用例
- * export async function getHealthAction() {
+ * export const getHealthAction = async () => {
  *   return createApiAction<HealthResponse>('/health');
  * }
  * ```
  */
-export function createApiAction<TResponse>(
+export const createApiAction = <TResponse>(
 	endpoint: string,
 	options?: RequestInit,
-): Result.ResultAsync<TResponse, ApiError> {
+): Result.ResultAsync<TResponse, ApiError> => {
 	// API設定を取得
 	const config = getApiConfig();
 	const apiCall = createApiCall(config);
@@ -50,7 +50,7 @@ export function createApiAction<TResponse>(
 			details: error,
 		}),
 	});
-}
+};
 
 /**
  * JSONデータを送信するPOST API呼び出しServer Actionを作成するヘルパー関数
@@ -62,17 +62,17 @@ export function createApiAction<TResponse>(
  * @param options - 追加のfetchオプション
  * @returns Result型でラップされたAPIレスポンス
  */
-export function createPostApiAction<TRequest, TResponse>(
+export const createPostApiAction = <TRequest, TResponse>(
 	endpoint: string,
 	data: TRequest,
 	options?: Omit<RequestInit, "method" | "body">,
-): Result.ResultAsync<TResponse, ApiError> {
+): Result.ResultAsync<TResponse, ApiError> => {
 	return createApiAction<TResponse>(endpoint, {
 		method: "POST",
 		body: JSON.stringify(data),
 		...options,
 	});
-}
+};
 
 /**
  * PUT API呼び出しServer Actionを作成するヘルパー関数
@@ -84,17 +84,17 @@ export function createPostApiAction<TRequest, TResponse>(
  * @param options - 追加のfetchオプション
  * @returns Result型でラップされたAPIレスポンス
  */
-export function createPutApiAction<TRequest, TResponse>(
+export const createPutApiAction = <TRequest, TResponse>(
 	endpoint: string,
 	data: TRequest,
 	options?: Omit<RequestInit, "method" | "body">,
-): Result.ResultAsync<TResponse, ApiError> {
+): Result.ResultAsync<TResponse, ApiError> => {
 	return createApiAction<TResponse>(endpoint, {
 		method: "PUT",
 		body: JSON.stringify(data),
 		...options,
 	});
-}
+};
 
 /**
  * DELETE API呼び出しServer Actionを作成するヘルパー関数
@@ -104,12 +104,12 @@ export function createPutApiAction<TRequest, TResponse>(
  * @param options - 追加のfetchオプション
  * @returns Result型でラップされたAPIレスポンス
  */
-export function createDeleteApiAction<TResponse = void>(
+export const createDeleteApiAction = <TResponse = void>(
 	endpoint: string,
 	options?: Omit<RequestInit, "method">,
-): Result.ResultAsync<TResponse, ApiError> {
+): Result.ResultAsync<TResponse, ApiError> => {
 	return createApiAction<TResponse>(endpoint, {
 		method: "DELETE",
 		...options,
 	});
-}
+};

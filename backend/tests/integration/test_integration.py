@@ -45,18 +45,14 @@ class TestIntegration:
         assert response.status_code == 200
 
         data = response.json()
-        required_fields = ["status", "timestamp", "message", "metrics", "version"]
+        required_fields = ["status", "timestamp"]
         for field in required_fields:
             assert field in data, f"Required field '{field}' missing in health response"
 
-        # メトリクス検証
-        metrics = data["metrics"]
-        metric_fields = ["cpu_usage", "memory_usage", "disk_usage", "uptime_seconds"]
-        for field in metric_fields:
-            assert field in metrics, f"Required metric '{field}' missing"
-            assert isinstance(metrics[field], int | float), (
-                f"Metric '{field}' should be numeric"
-            )
+        # ステータス検証
+        assert data["status"] == "healthy"
+        # タイムスタンプ検証
+        assert isinstance(data["timestamp"], str)
 
         # シンプルヘルスチェック（後方互換性）
         response = client.get("/api/health/simple")

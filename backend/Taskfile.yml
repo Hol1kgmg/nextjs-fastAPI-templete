@@ -2,6 +2,9 @@
 # プロジェクト直下からは task dev:backend でアクセス
 version: '3'
 
+vars:
+  EXCLUDES_PATH: src/db/migrations
+
 tasks:
   install:
     desc: "Install dependencies using uv"
@@ -24,70 +27,74 @@ tasks:
       - uv run pytest
 
   lint:
-    desc: "Run linting with ruff"
+    desc: "Run linting with ruff (with excludes)"
     cmds:
-      - uv run ruff check .
+      - |
+        EXCLUDES=""
+        for path in {{.EXCLUDES_PATH}}; do
+          EXCLUDES="$EXCLUDES --exclude $path"
+        done
+        uv run ruff check . $EXCLUDES
 
   lint:fix:
-    desc: "Run linting with ruff and auto-fix issues"
+    desc: "Run linting with ruff and auto-fix issues (with excludes)"
     cmds:
-      - uv run ruff check . --fix
+      - |
+        EXCLUDES=""
+        for path in {{.EXCLUDES_PATH}}; do
+          EXCLUDES="$EXCLUDES --exclude $path"
+        done
+        uv run ruff check . --fix $EXCLUDES
 
   format:
-    desc: "Format code with ruff"
+    desc: "Format code with ruff (with excludes)"
     cmds:
-      - uv run ruff format .
+      - |
+        EXCLUDES=""
+        for path in {{.EXCLUDES_PATH}}; do
+          EXCLUDES="$EXCLUDES --exclude $path"
+        done
+        uv run ruff format . $EXCLUDES
 
   format:check:
-    desc: "Check code formatting without making changes"
+    desc: "Check code formatting without making changes (with excludes)"
     cmds:
-      - uv run ruff format . --check
+      - |
+        EXCLUDES=""
+        for path in {{.EXCLUDES_PATH}}; do
+          EXCLUDES="$EXCLUDES --exclude $path"
+        done
+        uv run ruff format . --check $EXCLUDES
 
   typecheck:
-    desc: "Run type checking with mypy"
+    desc: "Run type checking with mypy (with excludes)"
     cmds:
-      - uv run mypy src
+      - |
+        EXCLUDES=""
+        for path in {{.EXCLUDES_PATH}}; do
+          EXCLUDES="$EXCLUDES --exclude $path"
+        done
+        uv run mypy src $EXCLUDES
 
   check:all:
     desc: "Run all code quality checks (lint, format, typecheck)"
     cmds:
-      # - task lint
-      # - task format:check
-      # - task typecheck
-      - task check:all:exclude -- src/db/migrations
-
-  check:all:exclude:
-    desc: "Run all code quality checks excluding specified directories"
-    summary: "Usage: task check:all:exclude -- dir1 dir2 dir3"
-    cmds:
       - |
-        EXCLUDES=""
-        for dir in {{.CLI_ARGS}}; do
-          EXCLUDES="$EXCLUDES --exclude $dir"
-        done
-        echo "🔍 コード品質チェック開始（除外: {{.CLI_ARGS}}）"
-        uv run ruff check . $EXCLUDES
-        uv run ruff format . --check $EXCLUDES
-        uv run mypy src
-        echo "✅ すべてのコード品質チェックが完了しました（除外: {{.CLI_ARGS}}）"
+        echo "🔍 コード品質チェック開始（除外: {{.EXCLUDES_PATH}}）"
+      - task lint
+      - task format:check
+      - task typecheck
+      - |
+        echo "✅ すべてのコード品質チェックが完了しました（除外: {{.EXCLUDES_PATH}}）"
 
   fix:all:
     desc: "Auto-fix all possible issues (lint + format)"
     cmds:
-      - task fix:all:exclude -- src/db/migrations
-
-  fix:all:exclude:
-    desc: "Auto-fix all possible issues excluding specified directories"
-    summary: "Usage: task fix:all:exclude -- dir1 dir2 dir3"
-    cmds:
       - |
-        EXCLUDES=""
-        for dir in {{.CLI_ARGS}}; do
-          EXCLUDES="$EXCLUDES --exclude $dir"
-        done
-        echo "🔧 自動修正開始（除外: {{.CLI_ARGS}}）"
-        uv run ruff check . --fix $EXCLUDES
-        uv run ruff format . $EXCLUDES
+         echo "🔧 自動修正開始（除外: {{.EXCLUDES_PATH}}）"
+      - task lint:fix
+      - task format
+      - |
         echo "✅ 自動修正完了。型チェックを実行してください - task typecheck"
 
   # マイグレーション関連

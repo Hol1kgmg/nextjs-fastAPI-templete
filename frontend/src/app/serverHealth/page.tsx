@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 	description: "Server-side health check dashboard with pre-rendered data",
 };
 
-export default async function ServerHealthPage() {
+const ServerHealthPage = async () => {
 	const healthResult = await getHealthAction();
 
 	return (
@@ -55,4 +55,6 @@ export default async function ServerHealthPage() {
 			</div>
 		</div>
 	);
-}
+};
+
+export default ServerHealthPage;

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 		"Client-side health check dashboard with real-time API monitoring",
 };
 
-export default function HealthPage() {
+const HealthPage = () => {
 	return (
 		<div className="container mx-auto px-4 py-8">
 			<div className="mx-auto max-w-2xl space-y-6">
@@ -53,4 +53,6 @@ export default function HealthPage() {
 			</div>
 		</div>
 	);
-}
+};
+
+export default HealthPage;

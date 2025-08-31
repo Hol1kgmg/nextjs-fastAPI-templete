@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function Home() {
+const Home = () => {
 	return (
 		<div className="space-y-16">
 			<h1 className="font-bold text-4xl">Hello World</h1>
@@ -17,4 +17,6 @@ export default function Home() {
 			</div>
 		</div>
 	);
-}
+};
+
+export default Home;

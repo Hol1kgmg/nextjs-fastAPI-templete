@@ -117,9 +117,8 @@ tasks:
 
   dev:frontend:
     desc: "[Frontend] Start development server"
-    dir: frontend
     cmds:
-      - bun run dev
+      - task -d frontend dev
 
   build:frontend:
     desc: "[Frontend] Build production application"
@@ -192,9 +191,8 @@ tasks:
 
   dev:backend:
     desc: "[Backend] Start development server"
-    dir: backend
     cmds:
-      - task dev
+      - task -d backend dev
 
   build:backend:
     desc: "[Backend] Build backend (placeholder)"

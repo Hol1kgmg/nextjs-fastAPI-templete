@@ -4,12 +4,12 @@ python = "3.11"
 uv = "latest"
 
 # フロントエンドツール
-node = "18.18.0"
-bun = "1.1.8"
+node = "20"
+bun = "1.2.21"
 
 # 共通ツール
 task = "latest"
 lefthook = "latest"
 
 # コード分析ツール
-rust = "latest"  # similarity-tsインストール用
+rust = "latest" # similarity-tsインストール用

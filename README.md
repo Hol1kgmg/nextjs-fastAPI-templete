@@ -49,6 +49,7 @@ nextjs-fastapi-template/
 │   ├── src/
 │   │   ├── app/               # Next.js App Router
 │   │   ├── components/        # Reactコンポーネント
+│   │   ├── features/          # 機能固有のディレクトリ
 │   │   └── lib/               # ユーティリティ
 │   ├── package.json
 │   └── README.md              # フロントエンド詳細ドキュメント
@@ -115,14 +116,7 @@ nextjs-fastapi-template/
 
 **統合開発環境**: このプロジェクトでは mise を使用してフロントエンドとバックエンドのツールバージョンを統一管理し、Task による一貫したコマンド体系を実現しています。
 
-### 1. リポジトリのクローン
-
-```bash
-git clone https://github.com/Hol1kgmg/nextjs-fastAPI-templete.git
-cd nextjs-fastAPI-templete
-```
-
-### 2. 統合環境セットアップ（推奨）
+### 1. 統合環境セットアップ（推奨）
 
 **最速で開発を開始する方法**:
 
@@ -131,17 +125,19 @@ cd nextjs-fastAPI-templete
    ```bash
    git clone https://github.com/Hol1kgmg/nextjs-fastAPI-templete.git
    cd nextjs-fastAPI-templete
-   mise install
+   mise trust && mise install
    task install
    ```
 
 2. **環境設定ファイルの作成（30 秒）**:
 
+   バックエンド環境設定
    ```bash
-   # バックエンド環境設定
    cp backend/.env.sample backend/.env
+   ```
 
-   # フロントエンド環境設定
+   フロントエンド環境設定
+   ```bash
    cp frontend/.env.sample frontend/.env
    ```
 
@@ -187,7 +183,7 @@ source ~/.zshrc
 mise settings add idiomatic_version_file_enable_tools python
 ```
 
-### 3. 個別環境での開発
+### 2. 個別環境での開発
 
 **バックエンドのみ開発する場合**:
 
@@ -206,7 +202,7 @@ task dev:backend
 task dev:frontend
 ```
 
-### 4. 従来の方法（後方互換性）
+### 3. 従来の方法（後方互換性）
 
 既存の開発者は従来通りの方法も継続利用可能：
 
@@ -228,7 +224,7 @@ task install
 task dev
 ```
 
-### 5. 便利なコマンド
+### 4. 便利なコマンド
 
 ```bash
 # 統合品質チェック

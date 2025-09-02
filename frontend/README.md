@@ -78,6 +78,7 @@ src/
 │   ├── ui/                # shadcn/ui コンポーネント
 │   ├── shared/            # 共有コンポーネント
 │   └── features/          # 機能別コンポーネント
+├── features/              # 機能固有のディレクトリ
 └── lib/
     └── utils.ts           # ユーティリティ関数
 ```

@@ -16,12 +16,12 @@ tasks:
   dev:
     desc: "Start development server (Next.js)"
     cmds:
-      - bun run --bun dev
+      - bun run dev
 
   build:
     desc: "Build production application"
     cmds:
-      - bun run --bun build
+      - bun run build
 
   start:
     desc: "Start production server"
